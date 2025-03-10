@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mad_project/componments/todo_taskfiled.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 // To-Do List Screen
 class TodoScreen extends StatefulWidget {
@@ -15,7 +17,7 @@ class _TodoState extends State<TodoScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("To Do List"),
+          title: const Text("To Do List"),
           backgroundColor: Colors.greenAccent,
         ),
         body: _todoBody(),
@@ -23,7 +25,7 @@ class _TodoState extends State<TodoScreen> {
     );
   }
 
-// to do body
+  // to do body
   Widget _todoBody() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -37,17 +39,27 @@ class _TodoState extends State<TodoScreen> {
 
           // progress
           _progressDetails(),
-          // list
-          _todoList(),
+
+          // list links
+          _todoTile2(),
+
+          // list here
+          Expanded(
+              child:
+                  _todoList()), // Expanded to allow list to take remaining space
           // button
           _todoCreateButton(),
+          // size box
+          SizedBox(
+            height: 15,
+          ),
         ],
       ),
     );
   }
 
-  _topTitle() {
-    return Align(
+  Widget _topTitle() {
+    return const Align(
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: EdgeInsets.all(8),
@@ -56,80 +68,149 @@ class _TodoState extends State<TodoScreen> {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-          ),),
+          ),
+        ),
       ),
     );
   }
 
-  _todoImg() {
+  Widget _todoImg() {
     return Center(
       child: Image.asset(
         'assets/img11.png',
-        width: 220,
+        width: 120,
       ),
     );
   }
 
-  _progressDetails() {
+  Widget _progressDetails() {
+    // Example data (replace with your actual task count and completed tasks)
+    int totalTasks = 15;
+    int completedTasks = 5; // Example completed tasks
+
+    // Calculate the percentage
+    double progressPercentage =
+        totalTasks > 0 ? completedTasks / totalTasks : 0.0;
+
     return Container(
-          margin: EdgeInsets.only(left: 4, right: 4),
-          height: 80,
-            padding: EdgeInsets.all(1.0), // Padding inside the Container
-            decoration: BoxDecoration(
-               // Background color
-               color: const Color.fromARGB(255, 58, 173, 102),
-               borderRadius: BorderRadius.circular(12.0), // Rounded corners radius
-            ),
-          
-          
+      margin: const EdgeInsets.only(left: 14, right: 14),
+      height: 80,
+      padding: const EdgeInsets.all(1.0),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 58, 173, 102),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Column(
         children: [
-          //title
-          Text(
+          const Text(
             'Today Progress',
             style: TextStyle(
               fontSize: 18,
               color: Colors.black,
-              fontWeight:FontWeight.bold),),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-           crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '15 Tasks',
-                style: TextStyle(
+                '$totalTasks Tasks',
+                style: const TextStyle(
                   fontWeight: FontWeight.w700,
-                ),),
+                ),
+              ),
               Column(
                 children: [
-                  Text(
+                  const Text(
                     'Progress here',
                     style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                )
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                   // progress bar
-                    LinearPercentIndicator(
+                  Row(
+                    children: [
+                      LinearPercentIndicator(
                         width: 70.0,
                         lineHeight: 14.0,
-                        percent: 0.3, // here the %
+                        percent: progressPercentage,
                         backgroundColor: Colors.grey,
                         progressColor: Colors.blue,
-                    ),
+                      ),
+                      const SizedBox(width: 8), // Add some spacing
+                      Text(
+                        '${(progressPercentage * 100).toStringAsFixed(0)}%', // Display the percentage
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
                 ],
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 
-  _todoList() {
-    return Text('ffff');
+  // ++++
+  _todoTile2() {
+    Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'TODAY',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text('23 Feb 2025'),
+        ),
+        TextButton(onPressed: () {}, child: Text('View All Tasks')),
+      ],
+    );
   }
 
-  _todoCreateButton() {
-    return Text('ffffffffff');
+  // todo list
+  Widget _todoList() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView(
+        padding: const EdgeInsets.all(8),
+        children: const <Widget>[
+          TodoTaskRow(
+            taskName: 'task 1',
+            isTaskDone: false,
+          ),
+          TodoTaskRow(
+            taskName: 'task 2',
+            isTaskDone: false,
+          ),
+          TodoTaskRow(
+            taskName: 'task 3',
+            isTaskDone: false,
+          ),
+          TodoTaskRow(
+            taskName: 'task 3',
+            isTaskDone: false,
+          ),
+          TodoTaskRow(
+            taskName: 'task 3',
+            isTaskDone: false,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _todoCreateButton() {
+    return ElevatedButton(onPressed: () {}, child: Icon(Icons.add));
   }
 }
