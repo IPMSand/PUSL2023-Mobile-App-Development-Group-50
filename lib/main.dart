@@ -1,32 +1,16 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart';
+import 'add_event_screen.dart'; // Import the AddEventScreen file
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'City Linker',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
+      debugShowCheckedModeBanner: false,
+      home: AddEventScreen(),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
