@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/event-plan.dart';
+import 'event_plan.dart';
 import '../screens/dashboard.dart';
 import '../screens/profile.dart';
 import '../screens/timer.dart';
