@@ -62,7 +62,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     children: [
                       Text('Today\'s progress Summary',
                           style: TextStyle(fontSize: 18)),
-                      Text('${originalTaskCount} tasks',
+                      Text('$originalTaskCount tasks',
                           style: TextStyle(color: Colors.grey)),
                     ],
                   ),

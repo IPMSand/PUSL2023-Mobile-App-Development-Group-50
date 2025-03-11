@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mad_project/screens/task_home_page.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class ProgressSummary extends StatelessWidget {
   final List<Task> tasks;

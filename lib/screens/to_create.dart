@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import the intl package for date formatting
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
@@ -89,7 +90,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     _category = _newCategoryController.text; //set new category as selected
                   });
                   Navigator.of(context).pop();
-                   _newCategoryController.clear(); //clear the controller after add.
+                  _newCategoryController.clear(); //clear the controller after add.
                 }
               },
             ),
@@ -141,7 +142,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             ),
             SizedBox(height: 20),
             ListTile(
-              title: Text('Date & Time: ${_selectedDate.toLocal()}'),
+            title: Text('Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
               trailing: Icon(Icons.calendar_today),
               onTap: () => _selectDate(context),
             ),
