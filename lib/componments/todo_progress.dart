@@ -1,6 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:mad_project/screens/task_home_page.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+class ProgressSummary extends StatelessWidget {
+  final List<Task> tasks;
+  final double progress;
+
+  const ProgressSummary({super.key, required this.tasks, required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Today\'s progress Summary', style: TextStyle(fontSize: 18)),
+                  Text('${tasks.length} tasks', style: const TextStyle(color: Colors.grey)),
+                ],
+              ),
+            ),
+            Text('progress ${progress * 100}%'),
+          ],
+        ),
+        const SizedBox(height: 10),
+        LinearProgressIndicator(value: progress),
+      ],
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
 class ProgressDetails extends StatelessWidget {
   final int totalTasks;
   final int completedTasks;
@@ -76,4 +119,4 @@ class ProgressDetails extends StatelessWidget {
       ),
     );
   }
-}
+}*/

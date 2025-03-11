@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     leading: Icon(Icons.shield_moon),
                     title: Text('To Do List'),
-                    onTap: () => _navigateToScreen( MainHomePage()),
+                    onTap: () => _navigateToScreen( TaskListScreen()),
                   ),
                   ListTile(
                     leading: Icon(Icons.timer),
