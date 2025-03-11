@@ -51,21 +51,23 @@ class _TaskListScreenState extends State<TaskListScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('Welcome', style: TextStyle(fontSize: 24)),
+            Text(
+              'Welcome',
+             style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              )),
             SizedBox(height: 50),
             // img
-            Center(
-                child: Image.network(
-              'https://images.unsplash.com/photo-1733506312514-267f8134208a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4MXx8fGVufDB8fHx8fA%3D%3D',
-              height: 60,
-            )),
+            Center(child: Image.asset('assets/img11.png', height: 120,),),
             SizedBox(height: 20),
             Container( // Container for progress related items
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 61, 172, 118), // Background color of the container
+                color: const Color.fromARGB(255, 129, 191, 161), // Background color of the container
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -78,9 +80,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text('Today\'s progress Summary',
-                                style: TextStyle(fontSize: 18)),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  )),
                             Text('$originalTaskCount tasks',
-                                style: TextStyle(color: Colors.grey)),
+                                style: TextStyle(color: const Color.fromARGB(255, 55, 55, 55))),
                           ],
                         ),
                       ),
