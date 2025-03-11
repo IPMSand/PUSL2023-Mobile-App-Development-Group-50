@@ -46,6 +46,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('To Do List'),
+        backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -53,25 +54,48 @@ class _TaskListScreenState extends State<TaskListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Welcome', style: TextStyle(fontSize: 24)),
+            SizedBox(height: 50),
+            // img
+            Center(
+                child: Image.network(
+              'https://images.unsplash.com/photo-1733506312514-267f8134208a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4MXx8fGVufDB8fHx8fA%3D%3D',
+              height: 60,
+            )),
             SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            Container( // Container for progress related items
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 61, 172, 118), // Background color of the container
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Text('Today\'s progress Summary',
-                          style: TextStyle(fontSize: 18)),
-                      Text('$originalTaskCount tasks',
-                          style: TextStyle(color: Colors.grey)),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Today\'s progress Summary',
+                                style: TextStyle(fontSize: 18)),
+                            Text('$originalTaskCount tasks',
+                                style: TextStyle(color: Colors.grey)),
+                          ],
+                        ),
+                      ),
+                      Text('progress ${(progress * 100).toStringAsFixed(2)}%'),
                     ],
                   ),
-                ),
-                Text('progress ${(progress * 100).toStringAsFixed(2)}%'),
-              ],
+                  SizedBox(height: 10),
+                  LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.grey[300], // Background color of the progress bar
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // Color of the progress bar
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 10),
-            LinearProgressIndicator(value: progress),
             SizedBox(height: 20),
             Text('Today\'s Task', style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
@@ -98,7 +122,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreateTaskScreen ()),
+            MaterialPageRoute(builder: (context) => CreateTaskScreen()),
           );
         },
         child: Icon(Icons.add),
