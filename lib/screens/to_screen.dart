@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import '../screens/to_create.dart';
+import '../screens/to_create.dart';
 import '../componments/todo_img.dart';
 import '../componments/todo_list.dart';
 import '../componments/todo_midtitle.dart';
@@ -17,11 +17,11 @@ class TodoScreen extends StatefulWidget {
 
 class _TodoState extends State<TodoScreen> {
   final List<Task> _tasks = [
-    Task(taskName: 'task 1',categoryName: 'html', isTaskDone: false),
-    Task(taskName: 'task 2',categoryName: 'css', isTaskDone: false),
-    Task(taskName: 'task 3',categoryName: 'data', isTaskDone: false),
-    Task(taskName: 'task 4',categoryName: 'html', isTaskDone: false),
-    Task(taskName: 'task 5',categoryName: 'html', isTaskDone: false),
+    Task(taskName: 'task 1',categoryName: 'html', isTaskDone: false, time: ''),
+    Task(taskName: 'task 2',categoryName: 'css', isTaskDone: false, time: ''),
+    Task(taskName: 'task 3',categoryName: 'data', isTaskDone: false, time: ''),
+    Task(taskName: 'task 4',categoryName: 'html', isTaskDone: false, time: ''),
+    Task(taskName: 'task 5',categoryName: 'html', isTaskDone: false, time: ''),
   ];
 
   final List<Task> _completedTasks = [];
@@ -36,7 +36,7 @@ class _TodoState extends State<TodoScreen> {
 
 void _addNewTask(String taskName, String categoryName, [bool? bool]) {
   setState(() {
-    _completedTasks.add(Task(taskName: taskName, categoryName: categoryName, isTaskDone: false));
+    _completedTasks.add(Task(taskName: taskName, categoryName: categoryName, isTaskDone: false, time: ''));
   });
 }
 
@@ -68,8 +68,6 @@ void _addNewTask(String taskName, String categoryName, [bool? bool]) {
           // img
           TodoImage(),
 
-          
-
           // list links
           Align(
             child: TodoTileHeader(
@@ -90,18 +88,16 @@ void _addNewTask(String taskName, String categoryName, [bool? bool]) {
             ),
           ),
 
-          // button
-          TodoCreateButton(
-            onPressed: () {
-              // Add your logic to create a new todo here
-              //(_tasks).add(Task(taskName: 'did 45',categoryName: 'html', isTaskDone: false));
-             
-             _addNewTask("Write report", "Work", false);
-              
-              debugPrint('Create todo button pressed!');
-            },
-            icon: Icons.add, // Optional: Change the icon
-          ),
+        TodoCreateButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>  TodoTaskRow()),
+          );
+          debugPrint('Create todo button pressed!');
+        },
+        icon: Icons.add,
+      ),
 
           // size box
           const SizedBox(

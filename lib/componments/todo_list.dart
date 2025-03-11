@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Assuming TodoTaskRow is defined elsewhere
 class TodoTaskRow extends StatelessWidget {
   final String taskName;
+  final String time;
   final String categoryName; // Added categoryName
   final bool isTaskDone;
   final VoidCallback? onTaskCompleted;
@@ -13,52 +14,30 @@ class TodoTaskRow extends StatelessWidget {
     required this.categoryName, // Added categoryName
     required this.isTaskDone,
     this.onTaskCompleted,
+    required this.time,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-       decoration: const BoxDecoration(
-    border: Border(
-      top: BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
-      left: BorderSide(color: Color(0xFFFFFFFF)),
-      right: BorderSide(color: Color(0xFFFFFFFF)),
-      bottom: BorderSide(color: Color(0xFFFFFFFF)),
-    ),
-    
-    color: Colors.greenAccent,
-  ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-      
-        children: [
-          // check box 1
-          Checkbox(
-            value: isTaskDone,
-            onChanged: onTaskCompleted != null
-                ? (bool? value) {
-                    if (value != null && value) {
-                      onTaskCompleted!();
-                    }
+    return ListTile(
+      leading: CircleAvatar(
+        child: Checkbox(
+          value: isTaskDone,
+          onChanged: onTaskCompleted != null
+              ? (bool? value) {
+                  if (value != null && value) {
+                    onTaskCompleted!();
                   }
-                : null,
-          ),
-          // task name
-          Text(
-                  taskName,
-                  style: TextStyle(
-                    decoration: isTaskDone ? TextDecoration.lineThrough : null,
-                  ),
-                ),
-          // space
-          SizedBox(
-            height: 38,
-          ),
-          // task type
-          Text(categoryName),
-        ],
+                }
+              : null,
+        ),
       ),
+      title: Text(taskName),
+      subtitle: Text(time),
+      trailing: Icon(Icons.chevron_right_rounded),
+      onTap: () {
+        // path
+      },
     );
   }
 }
@@ -88,13 +67,14 @@ class TodoList extends StatelessWidget {
               taskName: tasks[index].taskName,
               categoryName: tasks[index].categoryName, // Pass categoryName
               isTaskDone: tasks[index].isTaskDone,
-              onTaskCompleted: () => onTaskCompleted(index),
+              onTaskCompleted: () => onTaskCompleted(index), time: '',
             );
           } else {
             return TodoTaskRow(
               taskName: completedTasks[index - tasks.length].taskName,
-              categoryName: completedTasks[index - tasks.length].categoryName, // Pass categoryName
-              isTaskDone: true,
+              categoryName: completedTasks[index - tasks.length]
+                  .categoryName, // Pass categoryName
+              isTaskDone: true, time: '',
             );
           }
         },
@@ -109,5 +89,8 @@ class Task {
   final String categoryName; // Added categoryName
   final bool isTaskDone;
 
-  Task({required this.taskName, required this.categoryName, required this.isTaskDone});
+  Task(
+      {required this.taskName,
+      required this.categoryName,
+      required this.isTaskDone, required String time});
 }
