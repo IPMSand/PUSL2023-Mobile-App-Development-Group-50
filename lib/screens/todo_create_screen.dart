@@ -11,13 +11,13 @@ class CreateTaskScreen extends StatefulWidget {
 
 class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final TextEditingController _taskNameController = TextEditingController();
-  String _category = 'Task Category';
+  String _category = 'Programming Language';
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _newCategoryController = TextEditingController(); // Controller for new category input
-  final List<String> _categories = ['Modules', 'Assignments','Exams']; // List to hold categories
+  final List<String> _categories = ['Programming Language', 'Assignments','Exams']; // List to hold categories
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -113,7 +113,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           children: [
             TextField(
               controller: _taskNameController,
-              decoration: InputDecoration(labelText: 'Task Name'),
+              decoration: InputDecoration(
+                labelText: 'Task Name',
+                fillColor: const Color.fromARGB(255, 49, 49, 49),
+                ),
             ),
             SizedBox(height: 20),
             Row(
