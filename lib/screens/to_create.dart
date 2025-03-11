@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
+// TodoTaskRow widget (in todo_taskfiled.dart)
 class TodoTaskRow extends StatefulWidget {
   final String taskName;
   final bool isTaskDone;
+  final VoidCallback? onTaskCompleted; // Add this line
 
   const TodoTaskRow({
     super.key,
     required this.taskName,
     required this.isTaskDone,
+    this.onTaskCompleted, // Add this line
   });
 
   @override
@@ -27,10 +30,11 @@ class _TodoTaskRowState extends State<TodoTaskRow> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.horizontal(left: Radius.circular(2), right: Radius.circular(2)),
-        border: Border(bottom: BorderSide(color: Color.fromARGB(255, 255, 255, 255))),
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(2), right: Radius.circular(2)),
+        border: Border(
+          bottom: BorderSide(color: Color.fromARGB(255, 255, 255, 255))),
       ),
-      
       child: CheckboxListTile(
         title: Text(widget.taskName),
         value: _taskDone,
@@ -38,6 +42,9 @@ class _TodoTaskRowState extends State<TodoTaskRow> {
           if (newValue != null) {
             setState(() {
               _taskDone = newValue;
+              if (_taskDone && widget.onTaskCompleted != null) {
+                widget.onTaskCompleted!();
+              }
             });
           }
         },

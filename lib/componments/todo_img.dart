@@ -1,63 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:mad_project/componments/todo_taskfiled.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
-// To-Do List Screen
-class TodoScreen extends StatefulWidget {
-  const TodoScreen({super.key});
+// Component: _TodoImage.dart (Note the underscore)
+class TodoImage extends StatelessWidget {
+  const TodoImage({super.key});
 
-  @override
-  State<TodoScreen> createState() => _TodoState();
-}
-
-class _TodoState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("To Do List"),
-          backgroundColor: Colors.greenAccent,
-        ),
-        body: _todoBody(),
+    return Center(
+      child: Image.asset(
+        'assets/img11.png',
+        width: 120,
       ),
     );
   }
+}
 
-  // to do body
-  Widget _todoBody() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // ttitle
-          _topTitle(),
-          // img
-          _todoImg(),
 
-          // progress
-          _progressDetails(),
 
-          // list links
-          _todoTile2(),
 
-          // list here
-          Expanded(
-              child:
-                  _todoList()), // Expanded to allow list to take remaining space
-          // button
-          _todoCreateButton(),
-          // size box
-          SizedBox(
-            height: 15,
-          ),
-        ],
+
+
+/* here original
+  Widget _todoImg() {
+    return Center(
+      child: Image.asset(
+        'assets/img11.png',
+        width: 120,
       ),
     );
   }
-
+  */
+  /*
+  
+  
   Widget _topTitle() {
     return const Align(
       alignment: Alignment.centerLeft,
@@ -74,7 +49,8 @@ class _TodoState extends State<TodoScreen> {
     );
   }
 
-  Widget _todoImg() {
+  // to do image..here
+    Widget _todoImg() {
     return Center(
       child: Image.asset(
         'assets/img11.png',
@@ -82,11 +58,11 @@ class _TodoState extends State<TodoScreen> {
       ),
     );
   }
-
+  
   Widget _progressDetails() {
     // Example data (replace with your actual task count and completed tasks)
-    int totalTasks = 15;
-    int completedTasks = 5; // Example completed tasks
+    int totalTasks = _tasks.length + _completedTasks.length;
+    int completedTasks = _completedTasks.length; // Example completed tasks
 
     // Calculate the percentage
     double progressPercentage =
@@ -153,27 +129,31 @@ class _TodoState extends State<TodoScreen> {
     );
   }
 
-  // ++++
-  _todoTile2() {
-    Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        'TODAY',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+  Widget _todoTile2() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: Text('23 Feb 2025'),
+          child: Text(
+            'TODAY',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
-        TextButton(onPressed: () {}, child: Text('View All Tasks')),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('23 Feb 2025'),
+            ),
+            TextButton(onPressed: () {}, child: const Text('View All Tasks')),
+          ],
+        ),
       ],
     );
   }
@@ -182,35 +162,27 @@ class _TodoState extends State<TodoScreen> {
   Widget _todoList() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ListView(
+      child: ListView.builder(
         padding: const EdgeInsets.all(8),
-        children: const <Widget>[
-          TodoTaskRow(
-            taskName: 'task 1',
-            isTaskDone: false,
-          ),
-          TodoTaskRow(
-            taskName: 'task 2',
-            isTaskDone: false,
-          ),
-          TodoTaskRow(
-            taskName: 'task 3',
-            isTaskDone: false,
-          ),
-          TodoTaskRow(
-            taskName: 'task 3',
-            isTaskDone: false,
-          ),
-          TodoTaskRow(
-            taskName: 'task 3',
-            isTaskDone: false,
-          ),
-        ],
+        itemCount: _tasks.length + _completedTasks.length,
+        itemBuilder: (context, index) {
+          if (index < _tasks.length) {
+            return TodoTaskRow(
+              taskName: _tasks[index].taskName,
+              isTaskDone: _tasks[index].isTaskDone,
+              onTaskCompleted: () => _onTaskCompleted(index),
+            );
+          } else {
+            return TodoTaskRow(
+              taskName: _completedTasks[index - _tasks.length].taskName,
+              isTaskDone: true,
+            );
+          }
+        },
       ),
     );
   }
 
   Widget _todoCreateButton() {
-    return ElevatedButton(onPressed: () {}, child: Icon(Icons.add));
-  }
-}
+    return ElevatedButton(onPressed: () {}, child: const Icon(Icons.add));
+  } */

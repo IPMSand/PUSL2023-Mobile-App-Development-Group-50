@@ -3,7 +3,8 @@ import 'event_plan.dart';
 import '../screens/dashboard.dart';
 import '../screens/profile.dart';
 import '../screens/timer.dart';
-import '../screens/todo.dart';
+import '../screens/to_screen.dart';
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     leading: Icon(Icons.shield_moon),
                     title: Text('To Do List'),
-                    onTap: () => _navigateToScreen(TodoScreen()),
+                    onTap: () => _navigateToScreen( TodoScreen()),
                   ),
                   ListTile(
                     leading: Icon(Icons.timer),
