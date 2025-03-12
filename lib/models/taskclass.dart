@@ -5,3 +5,5 @@ class Task {
 
   Task({required this.name, required this.time, this.completed = false});
 }
+
+/* Models - data models or classes */

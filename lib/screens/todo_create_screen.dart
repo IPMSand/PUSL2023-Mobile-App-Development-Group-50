@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import the intl package for date formatting
+import 'package:intl/intl.dart';
+import '../componments/bottom_navbar.dart'; 
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
@@ -55,17 +56,22 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   }
 
   void _createTask() {
+    if (_taskNameController.text.trim().isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Task name cannot be empty.')),
+    );
+    return; // Stop 
+  }
+
     debugPrint('Task Name: ${_taskNameController.text}');
     debugPrint('Category: $_category');
     debugPrint('Date: ${_selectedDate.toLocal()}');
     debugPrint('Start Time: ${_startTime.format(context)}');
     debugPrint('End Time: ${_endTime.format(context)}');
     debugPrint('Description: ${_descriptionController.text}');
+    
 
-    // You can add logic here to pass the data back to the first screen
-    // or store it in a state management solution.
-
-    Navigator.pop(context); // Go back to the first screen
+    Navigator.pop(context); 
   }
 
   void _addNewCategory(BuildContext context) {
@@ -83,7 +89,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
-                _newCategoryController.clear(); //clear the controller
+                _newCategoryController.clear(); 
               },
             ),
             TextButton(
@@ -106,6 +112,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       },
     );
   }
+ 
+   int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,23 +129,21 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
+        child: Column(
+           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+
             // task name
             _createTaskName(),
 
-            SizedBox(height: 20),
             // select category
             _selectCategoryName(),
-
-            SizedBox(height: 20),
 
             // select date and time
             _selectTaskDate(),
             _selectStartTime(),
             _selectEndTime(),
 
-            SizedBox(height: 20),
             // note
             _addDescription(),
 
@@ -142,19 +153,26 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  // widgets inside body
-  _createTaskName() {
-    return TextField(
-      controller: _taskNameController,
-      decoration: InputDecoration(
-        labelText: 'Task Name',
-        fillColor: const Color.fromARGB(255, 49, 49, 49),
+         bottomNavigationBar: BottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
+
+  // widgets methods for body------
+_createTaskName() {
+  return TextField(
+    
+    controller: _taskNameController,
+    maxLength: 30, // Add max lenght later
+    decoration: InputDecoration(
+      labelText: 'Task Name',
+      fillColor: const Color.fromARGB(255, 49, 49, 49),
+      counterText: '', 
+    ),
+  );
+}
 
   _selectCategoryName() {
     return Row(
@@ -186,7 +204,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   _selectTaskDate() {
     return ListTile(
-      title: Text('Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
+      leading: Text('Task Date:'), // to temp align test
+      title: Text(' ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
       trailing: Icon(Icons.calendar_today),
       onTap: () => _selectDate(context),
     );
@@ -194,7 +213,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   _selectStartTime() {
     return ListTile(
-      title: Text('Start Time: ${_startTime.format(context)}'),
+      leading: Text('Start Time:'),
+      title: Text(' ${_startTime.format(context)}'),
       trailing: Icon(Icons.access_time),
       onTap: () => _selectTime(context, true),
     );
@@ -202,7 +222,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   _selectEndTime() {
     return ListTile(
-      title: Text('End Time: ${_endTime.format(context)}'),
+      leading: Text('End Time:'),
+      title: Text(' ${_endTime.format(context)}'),
       trailing: Icon(Icons.access_time),
       onTap: () => _selectTime(context, false),
     );
@@ -211,14 +232,24 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   _addDescription() {
     return TextField(
       controller: _descriptionController,
-      decoration: InputDecoration(labelText: 'Description'),
+      decoration: InputDecoration(
+        labelText: 'Description',
+      ),
       maxLines: 3,
+      maxLength: 80,
     );
   }
 
   _createtaskBtn() {
     return ElevatedButton(
       onPressed: _createTask,
+       style: ElevatedButton.styleFrom(
+                foregroundColor: const Color.fromARGB(255, 36, 160, 92),
+               
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                textStyle: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold)),
       child: Text('Create Task'),
     );
   }

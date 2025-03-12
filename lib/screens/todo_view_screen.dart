@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mad_project/componments/bottom_navbar.dart';
+import 'package:mad_project/models/taskclass.dart';
 import 'package:mad_project/screens/todo_create_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     Task(name: 'QUIZ', time: '04.30 PM - 05.30 PM', completed: false),
   ];
 
-  List<Task> completedTasks = []; // List to store completed tasks
+  List<Task> completedTasks = []; // List to store completed tasks --- later show in BtN(See All);
   late int originalTaskCount; // Store the original task count
 
   @override
@@ -66,6 +67,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
           // crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+
             // top title
             _topTitle(),
 
@@ -100,7 +102,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  //widgets
+  //widgets inside the body----
   _topTitle() {
     return Text('Welcome',
         style: TextStyle(
@@ -124,7 +126,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color.fromARGB(
-            255, 129, 191, 161), // Background color of the container
+            255, 129, 191, 161),
         borderRadius: BorderRadius.circular(28),
       ),
       child: Column(
@@ -156,9 +158,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor:
-                  Colors.grey[300], // Background color of the progress bar
+                  Colors.grey[300], // Intial color
               valueColor: AlwaysStoppedAnimation<Color>(
-                  Colors.blue), // Color of the progress bar
+                  Colors.blue), // After progress
             ),
           ),
         ],
@@ -220,10 +222,3 @@ class _TaskListScreenState extends State<TaskListScreen> {
   // bottom nav bar
 }
 
-class Task {
-  String name;
-  String time;
-  bool completed;
-
-  Task({required this.name, required this.time, this.completed = false});
-}
