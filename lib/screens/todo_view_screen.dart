@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mad_project/componments/bottom_navbar.dart';
 import 'package:mad_project/screens/todo_create_screen.dart';
 
 class TaskListScreen extends StatefulWidget {
@@ -11,6 +12,10 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   List<Task> tasks = [
+    Task(name: 'HTML', time: '09.00 AM - 11.00 AM', completed: false),
+    Task(name: 'CSS', time: '11.30 AM - 01.30 PM', completed: false),
+    Task(name: 'PHP', time: '2.00 PM - 04.00 PM', completed: false),
+    Task(name: 'QUIZ', time: '04.30 PM - 05.30 PM', completed: false),
     Task(name: 'HTML', time: '09.00 AM - 11.00 AM', completed: false),
     Task(name: 'CSS', time: '11.30 AM - 01.30 PM', completed: false),
     Task(name: 'PHP', time: '2.00 PM - 04.00 PM', completed: false),
@@ -63,28 +68,35 @@ class _TaskListScreenState extends State<TaskListScreen> {
           children: [
             // top title
             _topTitle(),
-            SizedBox(height: 50),
 
             // img
             _todoImg(),
 
-            SizedBox(height: 20),
             // progress section
             _todoProgress(),
-            SizedBox(height: 20),
 
-            Text('Today\'s Task', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // list title
+                _todoListTitle(),
+
+                // see all button
+                _viewAll(),
+              ],
+            ),
             // todo tasks list
             _todoTaskList(),
 
             // task buton
             _todoTaskAddBtn(),
-            // navbar
           ],
         ),
       ),
-      bottomNavigationBar: _bottomNavbar(),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 
@@ -113,7 +125,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
       decoration: BoxDecoration(
         color: const Color.fromARGB(
             255, 129, 191, 161), // Background color of the container
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(28),
       ),
       child: Column(
         children: [
@@ -139,16 +151,31 @@ class _TaskListScreenState extends State<TaskListScreen> {
             ],
           ),
           SizedBox(height: 10),
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor:
-                Colors.grey[300], // Background color of the progress bar
-            valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.blue), // Color of the progress bar
+          SizedBox(
+            width: 300,
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor:
+                  Colors.grey[300], // Background color of the progress bar
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.blue), // Color of the progress bar
+            ),
           ),
         ],
       ),
     );
+  }
+
+  _todoListTitle() {
+    return Text('Today\'s Task', style: TextStyle(fontSize: 20));
+  }
+
+  _viewAll() {
+    return TextButton(
+        onPressed: () {
+          debugPrint('Clicked! see all');
+        },
+        child: Text('See All'));
   }
 
   _todoTaskList() {
@@ -156,18 +183,21 @@ class _TaskListScreenState extends State<TaskListScreen> {
       child: ListView.builder(
         itemCount: tasks.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: Checkbox(
-              value: tasks[index].completed,
-              onChanged: (bool? value) => _toggleTaskCompletion(index),
-            ),
-            title: Text(tasks[index].name),
-            subtitle: Text(tasks[index].time),
-            trailing: InkWell(
-              onTap: () {
-                debugPrint('Clikied List Trailing!!');
-              },
-              child: Icon(Icons.chevron_right),
+          return Card(
+            surfaceTintColor: const Color.fromARGB(255, 112, 191, 137),
+            child: ListTile(
+              leading: Checkbox(
+                value: tasks[index].completed,
+                onChanged: (bool? value) => _toggleTaskCompletion(index),
+              ),
+              title: Text(tasks[index].name),
+              subtitle: Text(tasks[index].time),
+              trailing: InkWell(
+                onTap: () {
+                  debugPrint('Clikied List Trailing!!');
+                },
+                child: Icon(Icons.chevron_right),
+              ),
             ),
           );
         },
@@ -188,24 +218,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 
   // bottom nav bar
-  _bottomNavbar() {
-    return Expanded(
-      child: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: "Calendar"),
-          BottomNavigationBarItem(icon: Icon(Icons.timer), label: "Timer"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: "Settings"),
-        ],
-      ),
-    );
-  }
 }
 
 class Task {

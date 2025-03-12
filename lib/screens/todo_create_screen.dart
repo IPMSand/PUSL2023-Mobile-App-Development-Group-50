@@ -16,8 +16,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _newCategoryController = TextEditingController(); // Controller for new category input
-  final List<String> _categories = ['Programming Language', 'Assignments','Exams']; // List to hold categories
+  final TextEditingController _newCategoryController =
+      TextEditingController(); // Controller for new category input
+  final List<String> _categories = [
+    'Programming Language',
+    'Assignments',
+    'Exams'
+  ]; // List to hold categories
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -87,10 +92,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 if (_newCategoryController.text.isNotEmpty) {
                   setState(() {
                     _categories.add(_newCategoryController.text);
-                    _category = _newCategoryController.text; //set new category as selected
+                    _category = _newCategoryController
+                        .text; //set new category as selected
                   });
                   Navigator.of(context).pop();
-                  _newCategoryController.clear(); //clear the controller after add.
+                  _newCategoryController
+                      .clear(); //clear the controller after add.
                 }
               },
             ),
@@ -111,69 +118,108 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            TextField(
-              controller: _taskNameController,
-              decoration: InputDecoration(
-                labelText: 'Task Name',
-                fillColor: const Color.fromARGB(255, 49, 49, 49),
-                ),
-            ),
+            // task name
+            _createTaskName(),
+
             SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButton<String>(
-                    value: _category,
-                    items: _categories.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _category = newValue!;
-                      });
-                    },
-                    isExpanded: true,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () => _addNewCategory(context),
-                ),
-              ],
-            ),
+            // select category
+            _selectCategoryName(),
+
             SizedBox(height: 20),
-            ListTile(
-            title: Text('Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
-              trailing: Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context),
-            ),
-            ListTile(
-              title: Text('Start Time: ${_startTime.format(context)}'),
-              trailing: Icon(Icons.access_time),
-              onTap: () => _selectTime(context, true),
-            ),
-            ListTile(
-              title: Text('End Time: ${_endTime.format(context)}'),
-              trailing: Icon(Icons.access_time),
-              onTap: () => _selectTime(context, false),
-            ),
+
+            // select date and time
+            _selectTaskDate(),
+            _selectStartTime(),
+            _selectEndTime(),
+
             SizedBox(height: 20),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
-              maxLines: 3,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _createTask,
-              child: Text('Create Task'),
-            ),
+            // note
+            _addDescription(),
+
+            // create task btn
+            _createtaskBtn()
+,            SizedBox(height: 20),
           ],
         ),
       ),
+    );
+  }
+
+  // widgets inside body
+  _createTaskName() {
+    return TextField(
+      controller: _taskNameController,
+      decoration: InputDecoration(
+        labelText: 'Task Name',
+        fillColor: const Color.fromARGB(255, 49, 49, 49),
+      ),
+    );
+  }
+
+  _selectCategoryName() {
+    return Row(
+      children: [
+        Expanded(
+          child: DropdownButton<String>(
+            value: _category,
+            items: _categories.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _category = newValue!;
+              });
+            },
+            isExpanded: true,
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _addNewCategory(context),
+        ),
+      ],
+    );
+  }
+
+  _selectTaskDate() {
+    return ListTile(
+      title: Text('Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
+      trailing: Icon(Icons.calendar_today),
+      onTap: () => _selectDate(context),
+    );
+  }
+
+  _selectStartTime() {
+    return ListTile(
+      title: Text('Start Time: ${_startTime.format(context)}'),
+      trailing: Icon(Icons.access_time),
+      onTap: () => _selectTime(context, true),
+    );
+  }
+
+  _selectEndTime() {
+    return ListTile(
+      title: Text('End Time: ${_endTime.format(context)}'),
+      trailing: Icon(Icons.access_time),
+      onTap: () => _selectTime(context, false),
+    );
+  }
+
+  _addDescription() {
+    return TextField(
+      controller: _descriptionController,
+      decoration: InputDecoration(labelText: 'Description'),
+      maxLines: 3,
+    );
+  }
+
+  _createtaskBtn() {
+    return ElevatedButton(
+      onPressed: _createTask,
+      child: Text('Create Task'),
     );
   }
 }

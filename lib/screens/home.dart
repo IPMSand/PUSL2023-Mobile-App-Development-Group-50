@@ -3,7 +3,7 @@ import 'package:mad_project/screens/todo_view_screen.dart';
 import 'event_plan.dart';
 import '../screens/dashboard.dart';
 import '../screens/profile.dart';
-import '../screens/timer.dart';
+// import '../screens/timer.dart';
 
 
 
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     leading: Icon(Icons.timer),
                     title: Text('Timer'),
-                    onTap: () => _navigateToScreen(TimerScreen()),
+                    onTap: () => _navigateToScreen(TaskListScreen()),
                   ),
                   ListTile(
                     leading: Icon(Icons.event_available),
