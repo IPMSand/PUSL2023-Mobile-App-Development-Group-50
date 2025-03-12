@@ -48,7 +48,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,9 +80,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
             // task buton
             _todoTaskAddBtn(),
-             // navbar
+            // navbar
           ],
-          
         ),
       ),
       bottomNavigationBar: _bottomNavbar(),
@@ -165,7 +163,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
             ),
             title: Text(tasks[index].name),
             subtitle: Text(tasks[index].time),
-            trailing: Icon(Icons.chevron_right),
+            trailing: InkWell(
+              onTap: () {
+                debugPrint('Clikied List Trailing!!');
+              },
+              child: Icon(Icons.chevron_right),
+            ),
           );
         },
       ),
@@ -186,23 +189,23 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   // bottom nav bar
   _bottomNavbar() {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-      selectedItemColor: Colors.green,
-      unselectedItemColor: Colors.grey,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today), label: "Calendar"),
-        BottomNavigationBarItem(icon: Icon(Icons.timer), label: "Timer"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
-      ],
+    return Expanded(
+      child: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), label: "Calendar"),
+          BottomNavigationBarItem(icon: Icon(Icons.timer), label: "Timer"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: "Settings"),
+        ],
+      ),
     );
-    
   }
- 
-  
 }
 
 class Task {
