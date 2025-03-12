@@ -22,7 +22,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     'Programming Language',
     'Assignments',
     'Exams'
-  ]; // List to hold categories
+  ]; // List to hold categories.
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
