@@ -41,6 +41,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
     });
   }
 
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,86 +62,147 @@ class _TaskListScreenState extends State<TaskListScreen> {
           // crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              'Welcome',
-             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              )),
+            // top title
+            _topTitle(),
             SizedBox(height: 50),
+
             // img
-            Center(child: Image.asset('assets/img11.png', height: 120,),),
+            _todoImg(),
+
             SizedBox(height: 20),
-            Container( // Container for progress related items
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 129, 191, 161), // Background color of the container
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text('Today\'s progress Summary',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  )),
-                            Text('$originalTaskCount tasks',
-                                style: TextStyle(color: const Color.fromARGB(255, 55, 55, 55))),
-                          ],
-                        ),
-                      ),
-                      Text('progress ${(progress * 100).toStringAsFixed(2)}%'),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  LinearProgressIndicator(
-                    value: progress,
-                    backgroundColor: Colors.grey[300], // Background color of the progress bar
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // Color of the progress bar
-                  ),
-                ],
-              ),
-            ),
+            // progress section
+            _todoProgress(),
             SizedBox(height: 20),
+
             Text('Today\'s Task', style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Checkbox(
-                      value: tasks[index].completed,
-                      onChanged: (bool? value) => _toggleTaskCompletion(index),
-                    ),
-                    title: Text(tasks[index].name),
-                    subtitle: Text(tasks[index].time),
-                    trailing: Icon(Icons.chevron_right),
-                  );
-                },
-              ),
-            ),
+            // todo tasks list
+            _todoTaskList(),
+
+            // task buton
+            _todoTaskAddBtn(),
+             // navbar
           ],
+          
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreateTaskScreen()),
-          );
-        },
-        child: Icon(Icons.add),
+      bottomNavigationBar: _bottomNavbar(),
+    );
+  }
+
+  //widgets
+  _topTitle() {
+    return Text('Welcome',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ));
+  }
+
+  _todoImg() {
+    return Center(
+      child: Image.asset(
+        'assets/img11.png',
+        height: 120,
       ),
     );
   }
+
+  _todoProgress() {
+    return Container(
+      // Container for progress related items
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(
+            255, 129, 191, 161), // Background color of the container
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Today\'s progress Summary',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        )),
+                    Text('$originalTaskCount tasks',
+                        style: TextStyle(
+                            color: const Color.fromARGB(255, 55, 55, 55))),
+                  ],
+                ),
+              ),
+              Text('progress ${(progress * 100).toStringAsFixed(2)}%'),
+            ],
+          ),
+          SizedBox(height: 10),
+          LinearProgressIndicator(
+            value: progress,
+            backgroundColor:
+                Colors.grey[300], // Background color of the progress bar
+            valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.blue), // Color of the progress bar
+          ),
+        ],
+      ),
+    );
+  }
+
+  _todoTaskList() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: tasks.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: Checkbox(
+              value: tasks[index].completed,
+              onChanged: (bool? value) => _toggleTaskCompletion(index),
+            ),
+            title: Text(tasks[index].name),
+            subtitle: Text(tasks[index].time),
+            trailing: Icon(Icons.chevron_right),
+          );
+        },
+      ),
+    );
+  }
+
+  _todoTaskAddBtn() {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CreateTaskScreen()),
+        );
+      },
+      child: Icon(Icons.add),
+    );
+  }
+
+  // bottom nav bar
+  _bottomNavbar() {
+    return BottomNavigationBar(
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+      selectedItemColor: Colors.green,
+      unselectedItemColor: Colors.grey,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today), label: "Calendar"),
+        BottomNavigationBarItem(icon: Icon(Icons.timer), label: "Timer"),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+      ],
+    );
+    
+  }
+ 
+  
 }
 
 class Task {
