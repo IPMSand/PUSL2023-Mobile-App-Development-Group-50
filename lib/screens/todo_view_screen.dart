@@ -58,7 +58,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('To Do List'),
+        title: Text('My To Do'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -83,8 +83,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 // list title
                 _todoListTitle(),
 
-                // see all button
-                _viewAll(),
+                // see all button _viewAll(),
               ],
             ),
             // todo tasks list
@@ -104,11 +103,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   //widgets inside the body----
   _topTitle() {
-    return Text('Welcome',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ));
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text('Welcome',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          )),
+    );
   }
 
   _todoImg() {
@@ -125,8 +127,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
       // Container for progress related items
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(
-            255, 129, 191, 161),
+        color: const Color.fromARGB(255, 73, 175, 131),
         borderRadius: BorderRadius.circular(28),
       ),
       child: Column(
@@ -140,7 +141,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   children: [
                     Text('Today\'s progress Summary',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                         )),
                     Text('$originalTaskCount tasks',
@@ -169,16 +170,23 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 
   _todoListTitle() {
-    return Text('Today\'s Task', style: TextStyle(fontSize: 20));
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Text('Today\'s Tasks',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        )),
+    );
   }
 
-  _viewAll() {
+  /*_viewAll() {
     return TextButton(
         onPressed: () {
           debugPrint('Clicked! see all');
         },
         child: Text('See All'));
-  }
+  }--- no pages to view*/
 
   _todoTaskList() {
     return Expanded(
