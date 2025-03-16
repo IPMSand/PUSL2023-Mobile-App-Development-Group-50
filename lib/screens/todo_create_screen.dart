@@ -125,7 +125,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Create New Task'),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -168,63 +168,114 @@ _createTaskName() {
     maxLength: 30, // Add max lenght later
     decoration: InputDecoration(
       labelText: 'Task Name',
+      labelStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
       fillColor: const Color.fromARGB(255, 49, 49, 49),
       counterText: '', 
     ),
   );
 }
 
-  _selectCategoryName() {
-    return Row(
-      children: [
-        Expanded(
-          child: DropdownButton<String>(
-            value: _category,
-            items: _categories.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _category = newValue!;
-              });
-            },
-            isExpanded: true,
+Widget _selectCategoryName() {
+  return Row(
+    children: [
+      Expanded(
+        child: DropdownButton<String>(
+          value: _category,
+          items: _categories.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 14.0, // Adjust font size
+                  fontWeight: FontWeight.w400, // Adjust font weight
+                  //color: const Color.fromARGB(255, 0, 0, 0), // Adjust text color
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _category = newValue!;
+            });
+          },
+          isExpanded: true,
+          style: TextStyle( // Style for the selected value
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
           ),
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: const Color.fromARGB(255, 24, 151, 75), // Change dropdown arrow color
+          ),
+          underline: Container( // Remove the underline
+            height: 1,
+            color: Colors.grey[300],
+          ),
+          dropdownColor: Colors.grey[100], // Change dropdown background color
         ),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => _addNewCategory(context),
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.add,
+          color: Colors.green, // Change add icon color
         ),
-      ],
-    );
-  }
+        onPressed: () => _addNewCategory(context),
+      ),
+    ],
+  );
+}
 
   _selectTaskDate() {
     return ListTile(
-      leading: Text('Task Date:'), // to temp align test
+      leading: Text(
+        'Task Date:',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        ), // to temp align test
       title: Text(' ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
-      trailing: Icon(Icons.calendar_today),
+      trailing: Icon(
+        Icons.calendar_today,
+        color: const Color.fromARGB(255, 24, 151, 75), ),
       onTap: () => _selectDate(context),
     );
   }
 
   _selectStartTime() {
     return ListTile(
-      leading: Text('Start Time:'),
+      leading: Text(
+        'Start Time:',
+          style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),),
       title: Text(' ${_startTime.format(context)}'),
-      trailing: Icon(Icons.access_time),
+      trailing: Icon(
+        Icons.access_time,
+        color: const Color.fromARGB(255, 24, 151, 75), ),
       onTap: () => _selectTime(context, true),
     );
   }
 
   _selectEndTime() {
     return ListTile(
-      leading: Text('End Time:'),
+      leading: Text(
+        'End Time:',
+          style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        ),
       title: Text(' ${_endTime.format(context)}'),
-      trailing: Icon(Icons.access_time),
+      trailing: Icon(
+        Icons.access_time,
+        color: const Color.fromARGB(255, 24, 151, 75), ),
       onTap: () => _selectTime(context, false),
     );
   }
@@ -234,8 +285,13 @@ _createTaskName() {
       controller: _descriptionController,
       decoration: InputDecoration(
         labelText: 'Description',
+         labelStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
       ),
-      maxLines: 3,
+      ),
+      minLines: 2,
+      maxLines: 5,
       maxLength: 80,
     );
   }
@@ -244,8 +300,9 @@ _createTaskName() {
     return ElevatedButton(
       onPressed: _createTask,
        style: ElevatedButton.styleFrom(
-                foregroundColor: const Color.fromARGB(255, 36, 160, 92),
-               
+                foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                backgroundColor: Colors.green,
+                overlayColor: const Color.fromARGB(255, 36, 7, 255),
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 textStyle: TextStyle(
                 fontSize: 20,
