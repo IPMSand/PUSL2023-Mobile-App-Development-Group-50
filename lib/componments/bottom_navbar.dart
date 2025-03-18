@@ -1,5 +1,4 @@
 // bottom_navbar.dart
-
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -25,13 +24,16 @@ class _BottomNavBarState extends State<BottomNavBar> {
       selectedItemColor: Colors.green,
       unselectedItemColor: Colors.grey,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today), label: "Calendar"),
-        BottomNavigationBarItem(icon: Icon(Icons.timer), label: "Timer"),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.timer), label: "Timer"),
         BottomNavigationBarItem(
             icon: Icon(Icons.settings), label: "Settings"),
       ],
     );
   }
 }
+// TODO: here when clicking on the icon it should display that page
