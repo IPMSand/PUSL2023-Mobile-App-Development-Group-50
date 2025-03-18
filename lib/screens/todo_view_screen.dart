@@ -116,7 +116,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   _todoImg() {
     return Center(
       child: Image.asset(
-        'assets/img11.png',
+        'assets/start3.png',
         height: 120,
       ),
     );

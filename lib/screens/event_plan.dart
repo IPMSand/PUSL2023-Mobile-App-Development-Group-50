@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../componments/bottom_navbar.dart';
+
 class AddEventScreen extends StatefulWidget {
+  const AddEventScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _AddEventScreenState createState() => _AddEventScreenState();
 }
 
@@ -19,10 +24,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
+    }
   }
 
   void _onItemTapped(int index) {
@@ -54,7 +60,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         child: Column(
           children: [
             Center(
-              child: Image.asset('assets/image31.png', height: 150),
+              child: Image.asset('assets/start5.png', height: 150),
             ),
             SizedBox(height: 10),
             Container(
@@ -107,19 +113,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 110, 247, 115),
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.security), label: 'Security'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendar'),
-          BottomNavigationBarItem(icon: Icon(Icons.refresh), label: 'Refresh'),
-        ],
+     bottomNavigationBar: BottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
 }
+// ToDo: Top Navbar fix--->?

@@ -15,7 +15,7 @@ class Start03Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/start03.png',
+              'assets/start3.png',
               height: 250,
             ),
             const SizedBox(height: 15),
@@ -121,3 +121,4 @@ class Start03Screen extends StatelessWidget {
     );
   }
 }
+// TODO: Look at the problems in below 
