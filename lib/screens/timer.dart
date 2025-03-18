@@ -1,26 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Timer App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFD8FFD8), // Light green background
-      ),
-      home: const TimerPage(),
-    );
-  }
-}
 
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
@@ -265,3 +245,4 @@ class _TimerPageState extends State<TimerPage> {
     );
   }
 }
+// TODO: image does not display

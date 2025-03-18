@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mad_project/screens/timer.dart';
 import '../componments/bottom_navbar.dart';
 import '../screens/todo_view_screen.dart';
 import '../screens/event_plan.dart';
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: Icon(Icons.timer),
                     title: Text('Timer'),
 
-                    onTap: () => _navigateToScreen(StudyZenApp()), // replace with timer page
+                    onTap: () => _navigateToScreen(TimerPage()), // replace with timer page
 
                   ),
                   ListTile(

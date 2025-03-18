@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'start02.dart'; // Import the start02 page
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
-  runApp(const StudyZenApp());
-}
 
 class StudyZenApp extends StatelessWidget {
   const StudyZenApp({super.key});
