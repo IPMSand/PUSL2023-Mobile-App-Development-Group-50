@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../screens/todo_view_screen.dart';
 import '../screens/event_plan.dart';
+
+
 import '../screens/dashboard.dart';
 import '../screens/profile.dart';
 // import '../screens/timer.dart';
@@ -61,7 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     leading: Icon(Icons.timer),
                     title: Text('Timer'),
+
                     onTap: () => _navigateToScreen(TaskListScreen()), // replace with timer page
+
                   ),
                   ListTile(
                     leading: Icon(Icons.event_available),
