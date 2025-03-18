@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'start04.dart'; // Import the next screen
 
@@ -121,4 +121,4 @@ class Start03Screen extends StatelessWidget {
     );
   }
 }
-// TODO: Look at the problems in below 
+// TODO: Look at the problems in below */

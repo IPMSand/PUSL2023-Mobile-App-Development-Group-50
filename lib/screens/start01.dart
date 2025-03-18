@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'start02.dart'; // Import the start02 page
 import 'package:google_fonts/google_fonts.dart';
 
@@ -87,3 +87,4 @@ class _StudyZenScreenState extends State<StudyZenScreen> {
     );
   }
 }
+*/
