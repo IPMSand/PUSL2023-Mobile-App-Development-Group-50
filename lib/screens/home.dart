@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     leading: Icon(Icons.timer),
                     title: Text('Timer'),
-                    onTap: () => _navigateToScreen(TaskListScreen()),
+                    onTap: () => _navigateToScreen(TaskListScreen()), // replace with timer page
                   ),
                   ListTile(
                     leading: Icon(Icons.event_available),
