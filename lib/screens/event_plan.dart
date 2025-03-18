@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddEventScreen extends StatefulWidget {
+  const AddEventScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _AddEventScreenState createState() => _AddEventScreenState();
 }
 
@@ -19,10 +22,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
+    }
   }
 
   void _onItemTapped(int index) {
@@ -54,7 +58,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         child: Column(
           children: [
             Center(
-              child: Image.asset('assets/image31.png', height: 150),
+              child: Image.asset('assets/start5.png', height: 150),
             ),
             SizedBox(height: 10),
             Container(

@@ -14,7 +14,7 @@ class Start05Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/start05.png',
+              'assets/start5.png',
               height: 250,
             ),
             const SizedBox(height: 25),

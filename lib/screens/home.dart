@@ -5,6 +5,7 @@ import '../screens/event_plan.dart';
 
 import '../screens/dashboard.dart';
 import '../screens/profile.dart';
+import 'start01.dart';
 // import '../screens/timer.dart';
 
 
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: Icon(Icons.timer),
                     title: Text('Timer'),
 
-                    onTap: () => _navigateToScreen(TaskListScreen()), // replace with timer page
+                    onTap: () => _navigateToScreen(StudyZenApp()), // replace with timer page
 
                   ),
                   ListTile(

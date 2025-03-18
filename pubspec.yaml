@@ -65,6 +65,11 @@ flutter:
   assets:
      - assets/img11.png
      - assets/image31.png
+     - assets/start1.png
+     - assets/start2.png
+     - assets/start3.png
+     - assets/start4.png
+     - assets/start5.png
 
   #   - images/a_dot_ham.jpeg
 
