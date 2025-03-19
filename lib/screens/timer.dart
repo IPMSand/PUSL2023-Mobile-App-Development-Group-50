@@ -102,7 +102,7 @@ class _TimerPageState extends State<TimerPage> {
                         alignment: Alignment.center,
                         children: [
                           Image.network(
-                            'https://via.placeholder.com/150', // this doesnt work - use asset img
+                            'https://via.placeholder.com/150', // this doesnt work - use asset img.
                             fit: BoxFit.contain,
                           ),
                           const Text(
