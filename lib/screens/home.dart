@@ -89,22 +89,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
               title: Text("To Do List"),
-              onTap: () {},
+              onTap: () => _navigateToScreen(TaskListScreen()),
             ),
             ListTile(
               leading: Icon(Icons.calendar_today, color: Colors.green),
               title: Text("Calender"),
-              onTap: () {},
+              onTap: () => _navigateToScreen(CalendarScreen()),
             ),
             ListTile(
               leading: Icon(Icons.timer, color: Colors.green),
               title: Text("Timer"),
-              onTap: () {},
+              onTap: () => _navigateToScreen(TimerPage()),
             ),
             ListTile(
               leading: Icon(Icons.bar_chart_outlined, color: Colors.green),
               title: Text("Event Planing"),
-              onTap: () {},
+              onTap: () => _navigateToScreen(AddEventScreen()),
             ),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
