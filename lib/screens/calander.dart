@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../componments/bottom_navbar.dart';
+
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  const CalendarScreen({super.key});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -126,9 +126,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       crossAxisCount: 7,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: dayWidgets,
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
+      children: dayWidgets,
     );
   }
 
