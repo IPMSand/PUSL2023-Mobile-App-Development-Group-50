@@ -38,10 +38,14 @@ dependencies:
   percent_indicator: ^4.0.1
   intl: ^0.20.2
 
+<<<<<<< HEAD
   google_fonts: ^6.2.1
   shared_preferences: ^2.5.2
  
 
+=======
+  # google_fonts: ^6.2.1
+>>>>>>> parent of 1791bd3 (Merge pull request(tseting)  #31 from IPMSand/startup-pages)
 
 
 dev_dependencies:
@@ -68,8 +72,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-
-
      - assets/start1.png
      - assets/start2.png
      - assets/start3.png
@@ -85,7 +87,6 @@ flutter:
      - assets/home-html.png
      - assets/home-css.png
      - assets/home-php.png
-
 
 
   #   - images/a_dot_ham.jpeg

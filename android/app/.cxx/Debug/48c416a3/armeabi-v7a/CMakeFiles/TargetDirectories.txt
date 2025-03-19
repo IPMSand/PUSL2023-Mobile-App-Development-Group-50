@@ -1,2 +1,0 @@
-C:/Users/6IX9INE/Documents/GitHub/PUSL2023-Mobile-App-Development-Group-50/android/app/.cxx/Debug/48c416a3/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/6IX9INE/Documents/GitHub/PUSL2023-Mobile-App-Development-Group-50/android/app/.cxx/Debug/48c416a3/armeabi-v7a/CMakeFiles/rebuild_cache.dir
