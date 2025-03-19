@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
+import '../componments/bottom_navbar.dart';
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+  
+}
+
+class _MyWidgetState extends State<MyWidget> {
+
+   int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFCAFFBF),
-        title: const Text("Welcome"),
-        actions: [
-          Icon(Icons.settings),
-          SizedBox(width: 10),
-          Icon(Icons.person), // ✅ Profile Icon added
-          SizedBox(width: 10),
-        ],
-        leading: Icon(Icons.menu),
+        backgroundColor: Colors.greenAccent,
+        title: const Text("Welcome DashBoard"),
+       
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -83,21 +95,12 @@ class DashboardScreen extends StatelessWidget {
       ),
 
       // Bottom Navigation Bar (Fixed Background Color)
-      bottomNavigationBar: Container(
-        color: Color(0xFFCAFFBF), // Background color
-        child: BottomNavigationBar(
-          backgroundColor: Colors.transparent, // Transparent so Container color shows
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.black54,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.shield), label: "Security"),
-            BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Calendar"),
-            BottomNavigationBarItem(icon: Icon(Icons.refresh), label: "Refresh"),
-          ],
-        ),
+ bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
+  }
   }
 
   // Feature Icon with Background Color & Rounded Corners
@@ -205,4 +208,6 @@ class DashboardScreen extends StatelessWidget {
       ],
     );
   }
-}
+  
+
+

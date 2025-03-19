@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.home, color: Colors.green),
               title: Text("Home"),
-              onTap: () => _navigateToScreen(DashboardScreen()),
+              onTap: () => _navigateToScreen(MyWidget()),// this is dashboard later change name in dash.dart
             ),
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
