@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../componments/bottom_navbar.dart';
+import '../componments/custom_navbar.dart';
 
 
 class CalendarScreen extends StatefulWidget {
@@ -187,54 +188,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFBCF5B1), // Light green background
-        title: const Text(
-          'Calender', // Matching the spelling in the UI
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 0,
+      appBar:CustomAppBar(
+        title: "Calander",
       ),
       body: Column(
         children: [
           // Top navigation bar
-          Container(
-            color: const Color(0xFFBCF5B1), // Light green background
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {},
-                ),
-                const Text(
-                  'Welcome',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.person_outline),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Calendar Title and Icon
+                 // Calendar Title and Icon
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
