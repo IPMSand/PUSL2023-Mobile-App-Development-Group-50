@@ -5,6 +5,7 @@ import '../screens/todo_view_screen.dart';
 import '../screens/event_plan.dart';
 import 'calander.dart';
 import 'dashboard.dart';
+import 'package:mad_project/screens/loginPage.dart';
 
 
 
@@ -197,7 +198,11 @@ class ProfileScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.logout, color: Colors.red),
                   title: Text("Log Out", style: TextStyle(color: Colors.red)),
-                  onTap: () {},
+                   onTap: () {Navigator.pushAndRemoveUntil<void>(
+                          context,
+                          MaterialPageRoute<void>(builder: (BuildContext context) => const LoginScreen()),
+                          ModalRoute.withName('/'),
+                          );},
                 );
 
 
