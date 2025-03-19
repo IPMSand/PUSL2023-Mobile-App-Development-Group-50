@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../componments/bottom_navbar.dart';
 
-
-
-
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
 
