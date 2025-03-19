@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mad_project/screens/LoginPage.dart';
 import 'package:mad_project/screens/timer.dart';
 import '../componments/bottom_navbar.dart';
 import '../screens/todo_view_screen.dart';
@@ -109,11 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
               title: Text("Log Out", style: TextStyle(color: Colors.red)),
-              onTap: () {Navigator.pushAndRemoveUntil<void>(
-                          context,
-                          MaterialPageRoute<void>(builder: (BuildContext context) => const LoginScreen()),
-                          ModalRoute.withName('/'),
-                          );},
+              onTap: () {},
             ),
           ],
         ),

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mad_project/screens/home.dart';
 
-import 'LoginPage.dart';
-
 class Start05Screen extends StatelessWidget {
   const Start05Screen({super.key});
 
@@ -73,7 +71,7 @@ class Start05Screen extends StatelessWidget {
                onPressed: () {
                  Navigator.pushAndRemoveUntil(
                      context,
-                     MaterialPageRoute(builder: (context) => LoginScreen()), // Replace NewPage() with your target page widget
+                     MaterialPageRoute(builder: (context) => HomeScreen()), // Replace NewPage() with your target page widget
                      (Route<dynamic> route) => false,
                  );
             },
