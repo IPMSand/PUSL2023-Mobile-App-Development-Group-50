@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mad_project/screens/home.dart';
 
@@ -15,7 +15,7 @@ class Start05Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/start05.png',
+              'assets/start5.png',
               height: 250,
             ),
             const SizedBox(height: 25),
@@ -67,6 +67,7 @@ class Start05Screen extends StatelessWidget {
           children: [
             // Done Button
             ElevatedButton(
+
                onPressed: () {
                  Navigator.pushAndRemoveUntil(
                      context,
@@ -74,6 +75,7 @@ class Start05Screen extends StatelessWidget {
                      (Route<dynamic> route) => false,
                  );
             },
+
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                 backgroundColor: Colors.lightBlueAccent, 
@@ -94,3 +96,4 @@ class Start05Screen extends StatelessWidget {
     );
   }
 }
+// TODO: Look at the problems in below */

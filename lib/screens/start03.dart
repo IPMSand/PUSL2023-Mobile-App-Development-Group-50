@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'start04.dart'; // Import the next screen
 
@@ -15,7 +15,7 @@ class Start03Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/start03.png',
+              'assets/start3.png',
               height: 250,
             ),
             const SizedBox(height: 15),
@@ -121,3 +121,4 @@ class Start03Screen extends StatelessWidget {
     );
   }
 }
+// TODO: Look at the problems in below */

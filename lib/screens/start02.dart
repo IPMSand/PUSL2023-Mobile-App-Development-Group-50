@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async'; // Import for delay
 import 'start03.dart'; // Import the next screen
@@ -59,7 +59,7 @@ class _Start02ScreenState extends State<Start02Screen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/start02.png', 
+              'assets/start2.png', 
               height: 250,
             ),
             const SizedBox(height: 15),
@@ -87,3 +87,4 @@ class _Start02ScreenState extends State<Start02Screen> {
     );
   }
 }
+// TODO: Look at the problems in below */

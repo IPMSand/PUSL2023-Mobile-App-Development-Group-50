@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-// Profile Screen
+// Profile Screen --- this is included in homepage too...
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
