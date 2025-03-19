@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'LoginPage.dart';
 
 class Start05Screen extends StatelessWidget {
   const Start05Screen({super.key});
@@ -68,16 +66,11 @@ class Start05Screen extends StatelessWidget {
           children: [
             // Done Button
             ElevatedButton(
-
-
-               onPressed: () {
-                 Navigator.pushAndRemoveUntil(
-                     context,
-                     MaterialPageRoute(builder: (context) => LoginScreen()), // Replace NewPage() with your target page widget
-                     (Route<dynamic> route) => false,
-                 );
-            },
-
+              onPressed: () {
+                
+                debugPrint("Done button pressed");  
+                
+              },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                 backgroundColor: Colors.lightBlueAccent, 
@@ -98,4 +91,4 @@ class Start05Screen extends StatelessWidget {
     );
   }
 }
-// TODO: Look at the problems in below 
+// TODO: Look at the problems in below */
