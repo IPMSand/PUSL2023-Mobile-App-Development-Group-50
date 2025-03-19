@@ -3,6 +3,8 @@ import 'package:mad_project/componments/bottom_navbar.dart';
 import 'package:mad_project/models/taskclass.dart';
 import 'package:mad_project/screens/todo_create_screen.dart';
 
+import '../componments/custom_navbar.dart';
+
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
 
@@ -58,7 +60,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //title: Text('Back'),
+        title: Text('To Do List'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(

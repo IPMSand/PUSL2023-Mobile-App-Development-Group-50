@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../componments/bottom_navbar.dart';
-import '../componments/custom_navbar.dart';
+
+
 
 
 class CalendarScreen extends StatefulWidget {
@@ -188,8 +189,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:CustomAppBar(
-        title: "Calander",
+      appBar:AppBar(
+        title: Text('Calander'),
+        backgroundColor: Colors.greenAccent,
       ),
       body: Column(
         children: [
@@ -375,5 +377,5 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 }
 // TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
-//Try replacing the use of the deprecated member with the replacement.
-// ToDo: Top and Bottom Navbar fix--->?
+    //Try replacing the use of the deprecated member with the replacement.
+// TODo: Bottomnav bar here is cutstom desigend, try using bottom_navbar.dart widget calling
