@@ -6,8 +6,8 @@ import '../screens/event_plan.dart';
 import '../screens/dashboard.dart';
 import '../screens/profile.dart';
 import 'calander.dart';
-import 'start01.dart';
-import 'package:flutter/material.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -89,22 +89,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
               title: Text("To Do List"),
-               onTap: () => _navigateToScreen(TaskListScreen()),
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.calendar_today, color: Colors.green),
               title: Text("Calender"),
-               onTap: () => _navigateToScreen(CalendarScreen()),
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.timer, color: Colors.green),
               title: Text("Timer"),
-               onTap: () => _navigateToScreen(TimerPage()),
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.bar_chart_outlined, color: Colors.green),
               title: Text("Event Planing"),
-               onTap: () => _navigateToScreen(AddEventScreen()),
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
@@ -142,15 +142,81 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Center(child: Text("Main Content Here")),
-      bottomNavigationBar: MyBottomNavigationBarWidget(
-        initialIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.shield_moon_rounded), label: "To Do List"),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Calender"),
+          BottomNavigationBarItem(icon: Icon(Icons.timer), label: "Timer"),
+
+        ],
       ),
     );
   }
 }
 
+// Profile Screen
+class ProfileScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Profile"),
+        backgroundColor: Colors.greenAccent,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            CircleAvatar(
+              radius: 60,
+              backgroundColor: Colors.greenAccent,
+              child: Icon(Icons.person, color: Colors.white, size: 80),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Seraphina",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "seraphina@example.com",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.edit, color: Colors.green),
+              title: Text("Edit Profile"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfileScreen()),
+                );
+                ListTile(
+                  leading: Icon(Icons.phone, color: Colors.green),
+                  title: Text("Phone Number"),
+                  onTap: () {},
+                );
+                ListTile(
+                  leading: Icon(Icons.logout, color: Colors.red),
+                  title: Text("Log Out", style: TextStyle(color: Colors.red)),
+                  onTap: () {},
+                );
 
+
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 // Edit Profile Screen
 class EditProfileScreen extends StatefulWidget {
