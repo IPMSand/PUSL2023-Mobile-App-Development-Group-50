@@ -1,8 +1,5 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:mad_project/screens/home.dart';
-
-import 'RegisterPage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -212,12 +209,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             // Login functionality would go here
-                            Navigator.pushReplacement<void, void>(
-                             context,
-                             MaterialPageRoute<void>(
-                            builder: (BuildContext context) => const HomeScreen(),
-                            ),
-                          );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2D4059),
@@ -246,11 +237,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                            Navigator.push(
-                            context,
-                          MaterialPageRoute(builder: (context) => RegisterScreen()), // Replace NewPage() with your target page widget
-                          );
-                         },
+                              // Sign up navigation would go here
+                            },
                             child: const Text(
                               'Sign Up',
                               style: TextStyle(
