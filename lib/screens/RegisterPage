@@ -53,13 +53,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       color: Colors.black54,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   // Registration illustration
                   SizedBox(
-                    height: 120,
+                    height: 100,
                     child: buildRegisterIllustration(),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   // Form fields
                   buildFormField(
                     label: 'Your Name',
@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 10),
                   // Register button
                   SizedBox(
                     width: double.infinity,
@@ -110,7 +110,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 10),
                   // Login link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -176,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             suffixIcon: suffix,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 5),
       ],
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'screens/RegisterPage';
 import 'screens/home.dart';
 import 'screens/start01.dart';
 
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const RegisterScreen(), // first page to open in the system
+      home: const HomeScreen(), // first page to open in the system
     );
   }
 }
