@@ -1,13 +1,24 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'start02.dart'; // Import the start02 page
 import 'package:google_fonts/google_fonts.dart';
 
+
+class StudyZenApp extends StatelessWidget {
+  const StudyZenApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const StudyZenScreen(),
+    );
+  }
+}
 
 class StudyZenScreen extends StatefulWidget {
   const StudyZenScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _StudyZenScreenState createState() => _StudyZenScreenState();
 }
 
@@ -75,4 +86,4 @@ class _StudyZenScreenState extends State<StudyZenScreen> {
       ),
     );
   }
-}*/
+}

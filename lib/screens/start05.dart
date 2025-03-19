@@ -1,6 +1,7 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mad_project/screens/home.dart';
+
+import 'LoginPage.dart';
 
 class Start05Screen extends StatelessWidget {
   const Start05Screen({super.key});
@@ -67,13 +68,7 @@ class Start05Screen extends StatelessWidget {
           children: [
             // Done Button
             ElevatedButton(
-<<<<<<< HEAD
-              onPressed: () {
-                
-                debugPrint("Done button pressed");  
-                
-              },
-=======
+
 
                onPressed: () {
                  Navigator.pushAndRemoveUntil(
@@ -83,7 +78,6 @@ class Start05Screen extends StatelessWidget {
                  );
             },
 
->>>>>>> parent of 7414d9d (Merge branch 'main' into startup-pages)
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                 backgroundColor: Colors.lightBlueAccent, 
@@ -104,4 +98,4 @@ class Start05Screen extends StatelessWidget {
     );
   }
 }
-// TODO: Look at the problems in below */
+// TODO: Look at the problems in below 
