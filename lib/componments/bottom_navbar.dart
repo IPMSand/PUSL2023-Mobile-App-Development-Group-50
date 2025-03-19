@@ -1,37 +1,47 @@
-// bottom_navbar.dart
 import 'package:flutter/material.dart';
 
-class BottomNavBar extends StatefulWidget {
-  final int selectedIndex;
+class MyBottomNavigationBarWidget extends StatefulWidget {
+  final int initialIndex;
   final Function(int) onItemTapped;
 
-  const BottomNavBar({
-    super.key,
-    required this.selectedIndex,
+  const MyBottomNavigationBarWidget({super.key, 
+    required this.initialIndex,
     required this.onItemTapped,
   });
 
   @override
-  State<BottomNavBar> createState() => _BottomNavBarState(); //Changed to createState
+  // ignore: library_private_types_in_public_api
+  _MyBottomNavigationBarWidgetState createState() => _MyBottomNavigationBarWidgetState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _MyBottomNavigationBarWidgetState extends State<MyBottomNavigationBarWidget> {
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    widget.onItemTapped(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: widget.selectedIndex,
-      onTap: widget.onItemTapped,
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
       selectedItemColor: Colors.green,
       unselectedItemColor: Colors.grey,
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today), label: "Calendar"),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.timer), label: "Timer"),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.settings), label: "Settings"),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(icon: Icon(Icons.shield_moon_rounded), label: "To Do List"),
+        BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Calender"),
+        BottomNavigationBarItem(icon: Icon(Icons.timer), label: "Timer"),
       ],
     );
   }

@@ -1,24 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Calendar App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: const CalendarScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  const CalendarScreen({super.key});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -142,9 +126,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       crossAxisCount: 7,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: dayWidgets,
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
+      children: dayWidgets,
     );
   }
 
@@ -202,54 +186,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFBCF5B1), // Light green background
-        title: const Text(
-          'Calender', // Matching the spelling in the UI
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 0,
+      appBar:AppBar(
+        title: Text('Calander'),
+        backgroundColor: Colors.greenAccent,
       ),
       body: Column(
         children: [
           // Top navigation bar
-          Container(
-            color: const Color(0xFFBCF5B1), // Light green background
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {},
-                ),
-                const Text(
-                  'Welcome',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.person_outline),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Calendar Title and Icon
+                 // Calendar Title and Icon
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
@@ -380,8 +324,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   void _showAddEventDialog(BuildContext context) {
-    final TextEditingController _eventController = TextEditingController();
-    final TextEditingController _timeController = TextEditingController();
+    final TextEditingController eventController = TextEditingController();
+    final TextEditingController timeController = TextEditingController();
 
     showDialog(
       context: context,
@@ -391,13 +335,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              controller: _eventController,
+              controller: eventController,
               decoration: const InputDecoration(
                 labelText: 'Event Title',
               ),
             ),
             TextField(
-              controller: _timeController,
+              controller: timeController,
               decoration: const InputDecoration(
                 labelText: 'Time (e.g., 10.00AM)',
               ),
@@ -411,13 +355,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           TextButton(
             onPressed: () {
-              if (_eventController.text.isNotEmpty) {
+              if (eventController.text.isNotEmpty) {
                 setState(() {
                   final key = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
                   if (_events[key] == null) {
                     _events[key] = [];
                   }
-                  _events[key]!.add(_eventController.text);
+                  _events[key]!.add(eventController.text);
                 });
                 Navigator.pop(context);
               }
@@ -430,5 +374,5 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 }
 // TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
-//Try replacing the use of the deprecated member with the replacement.
-// ToDo: Top and Bottom Navbar fix--->?
+    //Try replacing the use of the deprecated member with the replacement.
+// TODo: Bottomnav bar here is cutstom desigend, try using bottom_navbar.dart widget calling..

@@ -77,27 +77,9 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFD8FFD8),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () {},
-        ),
-        title: const Text(
-          'Welcome',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.person, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
+       appBar: AppBar(
+        title: Text('Timer'),
+        backgroundColor: Colors.greenAccent,
       ),
       body: SafeArea(
         child: Column(
@@ -120,7 +102,7 @@ class _TimerPageState extends State<TimerPage> {
                         alignment: Alignment.center,
                         children: [
                           Image.network(
-                            'https://via.placeholder.com/150',
+                            'https://via.placeholder.com/150', // this doesnt work - use asset img.
                             fit: BoxFit.contain,
                           ),
                           const Text(
@@ -249,4 +231,4 @@ class _TimerPageState extends State<TimerPage> {
 // TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
 //Try replacing the use of the deprecated member with the replacement.
 // TODO: Look at the problems in below 
-// ToDo: Top and Bottom Navbar fix--->?
+// ToDo:Bottom Navbar fix--->?

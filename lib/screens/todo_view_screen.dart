@@ -58,7 +58,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //title: Text('Back'),
+        title: Text('To Do List'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -94,8 +94,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
+     bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );

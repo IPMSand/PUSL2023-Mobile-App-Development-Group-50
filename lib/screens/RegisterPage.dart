@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -319,3 +318,5 @@ class PersonPainter extends CustomPainter {
     return false;
   }
 }
+// TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
+    //Try replacing the use of the deprecated member with the replacement.

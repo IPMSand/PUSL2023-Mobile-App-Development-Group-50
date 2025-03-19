@@ -3,12 +3,29 @@ import 'package:mad_project/screens/timer.dart';
 import '../componments/bottom_navbar.dart';
 import '../screens/todo_view_screen.dart';
 import '../screens/event_plan.dart';
-import '../screens/dashboard.dart';
-import '../screens/profile.dart';
-import 'start01.dart';
-// import '../screens/timer.dart';
+import 'calander.dart';
 
 
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Welcome',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        useMaterial3: true,
+      ),
+      home: const HomeScreen(),
+    );
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,104 +54,245 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
-        child: Column(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            UserAccountsDrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.greenAccent),
-              accountName: Text("Seraphina", style: TextStyle(fontWeight: FontWeight.bold)),
-              accountEmail: Text("seraphina@example.com"),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Colors.green, size: 40),
-              ),
-            ),
-            Expanded(
-              child: ListView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Dashboard'),
-                    onTap: () => _navigateToScreen(DashboardScreen()),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, color: Colors.green.shade800, size: 40),
                   ),
-                  ListTile(
-                    leading: Icon(Icons.shield_moon),
-                    title: Text('To Do List'),
-                    onTap: () => _navigateToScreen( TaskListScreen()),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Seraphina",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  ListTile(
-                    leading: Icon(Icons.timer),
-                    title: Text('Timer'),
-
-                    onTap: () => _navigateToScreen(TimerPage()), // replace with timer page
-
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.event_available),
-                    title: Text('Event Planning'),
-                    onTap: () => _navigateToScreen(AddEventScreen()),
+                  Text(
+                    "seraphina@example.com",
+                    style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ],
               ),
             ),
-            Divider(),
+            ListTile(
+              leading: Icon(Icons.home, color: Colors.green),
+              title: Text("Home"),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
+              title: Text("To Do List"),
+              onTap: () => _navigateToScreen(TaskListScreen()),
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_today, color: Colors.green),
+              title: Text("Calender"),
+              onTap: () => _navigateToScreen(CalendarScreen()),
+            ),
+            ListTile(
+              leading: Icon(Icons.timer, color: Colors.green),
+              title: Text("Timer"),
+              onTap: () => _navigateToScreen(TimerPage()),
+            ),
+            ListTile(
+              leading: Icon(Icons.bar_chart_outlined, color: Colors.green),
+              title: Text("Event Planing"),
+              onTap: () => _navigateToScreen(AddEventScreen()),
+            ),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
-              title: Text('Log Out', style: TextStyle(color: Colors.red)),
+              title: Text("Log Out", style: TextStyle(color: Colors.red)),
               onTap: () {},
             ),
           ],
         ),
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            decoration: const BoxDecoration(
-              color: Colors.greenAccent,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+      appBar: AppBar(
+        backgroundColor: Colors.greenAccent,
+        title: Text("Welcome", style: TextStyle(color: Colors.black)),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Colors.black),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+        actions: [
+          Icon(Icons.settings, color: Colors.black),
+          const SizedBox(width: 10),
+          GestureDetector(
+            onTap: () => _navigateToScreen(ProfileScreen()),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: Colors.green.shade800),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: Center(child: Text("Main Content Here")),
+      bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
+    );
+  }
+}
+
+// Profile Screen
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Profile"),
+        backgroundColor: Colors.greenAccent,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            CircleAvatar(
+              radius: 60,
+              backgroundColor: Colors.greenAccent,
+              child: Icon(Icons.person, color: Colors.white, size: 80),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Seraphina",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "seraphina@example.com",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.edit, color: Colors.green),
+              title: Text("Edit Profile"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfileScreen()),
+                );
+                ListTile(
+                  leading: Icon(Icons.phone, color: Colors.green),
+                  title: Text("Phone Number"),
+                  onTap: () {},
+                );
+                ListTile(
+                  leading: Icon(Icons.logout, color: Colors.red),
+                  title: Text("Log Out", style: TextStyle(color: Colors.red)),
+                  onTap: () {},
+                );
+
+
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Edit Profile Screen
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
+  @override
+  _EditProfileScreenState createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  final TextEditingController _nameController = TextEditingController(text: "Seraphina");
+  final TextEditingController _emailController = TextEditingController(text: "seraphina@example.com");
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Edit Profile"),
+        backgroundColor: Colors.greenAccent,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            Stack(
               children: [
-                Builder(
-                  builder: (context) {
-                    return IconButton(
-                      icon: const Icon(Icons.menu, size: 30, color: Colors.black),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    );
-                  },
+                CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.greenAccent,
+                  child: Icon(Icons.person, color: Colors.white, size: 80),
                 ),
-                const Text(
-                  "Welcome",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.notifications, color: Colors.black),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () => _navigateToScreen(ProfileScreen()),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.person, color: Colors.green.shade800),
-                      ),
-                    ),
-                  ],
+                Positioned(
+                  bottom: 5,
+                  right: 5,
+                  child: CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.blueAccent,
+                    child: Icon(Icons.camera_alt, color: Colors.white, size: 18),
+                  ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: Center(child: Text("Main Content Here")),
-          ),
-        ],
+            const SizedBox(height: 20),
+            _buildTextField("Name", _nameController),
+            _buildTextField("Email Address", _emailController),
+            _buildTextField("Password", _passwordController, obscureText: true),
+            _buildTextField("Birth Date", _birthDateController),
+            _buildTextField("Phone Number", _phoneController),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueGrey,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Done", style: TextStyle(color: Colors.white, fontSize: 16)),
+            ),
+          ],
+        ),
       ),
-     bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller, {bool obscureText = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: TextField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: Colors.grey.shade200,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+        ),
       ),
     );
   }

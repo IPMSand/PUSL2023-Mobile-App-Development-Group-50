@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../componments/bottom_navbar.dart';
+
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
@@ -41,19 +41,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.green.shade200,
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {},
-        ),
-        title: Text('Welcome', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [
-          Icon(Icons.notifications),
-          SizedBox(width: 10),
-          Icon(Icons.person),
-          SizedBox(width: 10),
-        ],
+       appBar: AppBar(
+        title: Text('Event'),
+        backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -113,11 +103,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
           ],
         ),
       ),
-     bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
+    bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );
   }
 }
-// ToDo: Top Navbar fix--->?
+// TODo: Bottomnav bar here is cutstom desigend, try using bottom_navbar.dart widget calling..
