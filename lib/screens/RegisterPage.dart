@@ -123,6 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextButton(
                         onPressed: () {
                           // Login navigation would go here
+                          Navigator.pop(context);
                         },
                         child: const Text(
                           'Login',
