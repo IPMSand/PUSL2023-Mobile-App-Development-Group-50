@@ -70,6 +70,17 @@ flutter:
      - assets/start3.png
      - assets/start4.png
      - assets/start5.png
+     - assets/home-profile.png
+     - assets/home-list.png
+     - assets/home-calendar.png
+     - assets/home-plan.png
+     - assets/home-timer.png
+     - assets/home-graph.png
+     - assets/home-pie.png
+     - assets/home-html.png
+     - assets/home-css.png
+     - assets/home-php.png
+
 
   #   - images/a_dot_ham.jpeg
 
