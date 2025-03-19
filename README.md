@@ -1,7 +1,8 @@
 # mad_project
 .....
 A new Flutter project.
-
+# Future work
+- [ ] BottomNavbar icons does not rediret to any pages 
 ## Getting Started
 
 This project is a starting point for a Flutter application.
