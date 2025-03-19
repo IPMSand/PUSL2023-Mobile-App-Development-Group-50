@@ -2,34 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login Screen',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.grey[200],
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-      home: const LoginScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
