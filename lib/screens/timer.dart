@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../componments/custom_navbar.dart';
-
 
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
@@ -104,7 +102,7 @@ class _TimerPageState extends State<TimerPage> {
                         alignment: Alignment.center,
                         children: [
                           Image.network(
-                            'https://via.placeholder.com/150',
+                            'https://via.placeholder.com/150', // this doesnt work - use asset img
                             fit: BoxFit.contain,
                           ),
                           const Text(

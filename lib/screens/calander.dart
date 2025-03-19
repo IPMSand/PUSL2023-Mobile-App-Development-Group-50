@@ -324,8 +324,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   void _showAddEventDialog(BuildContext context) {
-    final TextEditingController _eventController = TextEditingController();
-    final TextEditingController _timeController = TextEditingController();
+    final TextEditingController eventController = TextEditingController();
+    final TextEditingController timeController = TextEditingController();
 
     showDialog(
       context: context,
@@ -335,13 +335,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              controller: _eventController,
+              controller: eventController,
               decoration: const InputDecoration(
                 labelText: 'Event Title',
               ),
             ),
             TextField(
-              controller: _timeController,
+              controller: timeController,
               decoration: const InputDecoration(
                 labelText: 'Time (e.g., 10.00AM)',
               ),
@@ -355,13 +355,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           TextButton(
             onPressed: () {
-              if (_eventController.text.isNotEmpty) {
+              if (eventController.text.isNotEmpty) {
                 setState(() {
                   final key = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
                   if (_events[key] == null) {
                     _events[key] = [];
                   }
-                  _events[key]!.add(_eventController.text);
+                  _events[key]!.add(eventController.text);
                 });
                 Navigator.pop(context);
               }
