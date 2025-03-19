@@ -94,8 +94,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
+     bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );

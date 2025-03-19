@@ -113,8 +113,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
           ],
         ),
       ),
-     bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
+    bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );

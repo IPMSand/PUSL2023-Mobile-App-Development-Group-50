@@ -153,8 +153,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           ],
         ),
       ),
-         bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
+         bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );
