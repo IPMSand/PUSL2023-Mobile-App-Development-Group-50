@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'LoginPage.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -11,7 +13,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _profilePictureController = TextEditingController();
+  final TextEditingController _profilePictureController =
+      TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
   @override
@@ -122,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Login navigation would go here
+                          Navigator.pop(context);// Replace NewPage() with your target page widget
                         },
                         child: const Text(
                           'Login',
