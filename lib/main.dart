@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
 
-
 // keep this page as it. Don't put ur code here. just change which screen to open here
 // home: const HomeScreen(), // first page to open in the system
 void main() {
@@ -19,8 +18,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const HomeScreen(), // first page to open in the system
+
+      home: const OpenDemo(),
+
     );
   }
 }
 // ToDO: for the first login user display start 1-5 pages......
+// ToDO: Determine pages order

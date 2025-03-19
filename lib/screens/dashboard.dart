@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
+import '../componments/bottom_navbar.dart';
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreen();
+}
+
+class _DashboardScreen extends State<DashboardScreen> {
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFFCAFFBF),
-        title: const Text("Welcome"),
-        actions: [
-          Icon(Icons.settings),
-          SizedBox(width: 10),
-          Icon(Icons.person), // ✅ Profile Icon added
-          SizedBox(width: 10),
-        ],
-        leading: Icon(Icons.menu),
+        title: const Text("Dashboard"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -36,18 +45,21 @@ class DashboardScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildFeatureIcon("My Profile", "assets/home-profile.png"),
+                        _buildFeatureIcon(
+                            "My Profile", "assets/home-profile.png"),
                         SizedBox(width: 12),
                         _buildFeatureIcon("To Do List", "assets/home-list.png"),
                         SizedBox(width: 12),
-                        _buildFeatureIcon("Calendar", "assets/home-calendar.png"),
+                        _buildFeatureIcon(
+                            "Calendar", "assets/home-calendar.png"),
                       ],
                     ),
                     SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildFeatureIcon("Plan Events", "assets/home-plan.png"),
+                        _buildFeatureIcon(
+                            "Plan Events", "assets/home-plan.png"),
                         SizedBox(width: 12),
                         _buildFeatureIcon("Timer", "assets/home-timer.png"),
                       ],
@@ -60,13 +72,15 @@ class DashboardScreen extends StatelessWidget {
               _buildChartRow(),
               const SizedBox(height: 16),
 
-              const Text("Upcoming Events", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text("Upcoming Events",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               _buildEventCard("QUIZ", "04.30 PM - 05.30 PM"),
               _buildEventCard("Task", "08.30 PM - 10.00 PM"),
               _buildEventCard("Practical", "08.30 AM - 10.00 AM"),
 
               const SizedBox(height: 16),
-              const Text("Tasks", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text("Tasks",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
 
               // Task Icons Row
               Row(
@@ -83,19 +97,9 @@ class DashboardScreen extends StatelessWidget {
       ),
 
       // Bottom Navigation Bar (Fixed Background Color)
-      bottomNavigationBar: Container(
-        color: Color(0xFFCAFFBF), // Background color
-        child: BottomNavigationBar(
-          backgroundColor: Colors.transparent, // Transparent so Container color shows
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.black54,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.shield), label: "Security"),
-            BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Calendar"),
-            BottomNavigationBarItem(icon: Icon(Icons.refresh), label: "Refresh"),
-          ],
-        ),
+      bottomNavigationBar: MyBottomNavigationBarWidget(
+        initialIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
@@ -121,7 +125,8 @@ class DashboardScreen extends StatelessWidget {
           FittedBox(
             child: Text(
               label,
-              style: TextStyle(fontSize: 11), // 🔹 Change 12 to 16 (or any size)
+              style:
+                  TextStyle(fontSize: 11), // 🔹 Change 12 to 16 (or any size)
               textAlign: TextAlign.center,
             ),
           ),
