@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mad_project/screens/home.dart';
 
 import 'LoginPage.dart';
 
@@ -69,6 +68,7 @@ class Start05Screen extends StatelessWidget {
           children: [
             // Done Button
             ElevatedButton(
+
 
                onPressed: () {
                  Navigator.pushAndRemoveUntil(
