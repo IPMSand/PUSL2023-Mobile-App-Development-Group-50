@@ -1,24 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: "Poppins",
-      ),
-      home: DashboardScreen(),
-    );
-  }
-}
-
 class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -55,20 +36,20 @@ class DashboardScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildFeatureIcon("My Profile", "assets/images/home-profile.png"),
+                        _buildFeatureIcon("My Profile", "assets/home-profile.png"),
                         SizedBox(width: 12),
-                        _buildFeatureIcon("To Do List", "assets/images/home-list.png"),
+                        _buildFeatureIcon("To Do List", "assets/home-list.png"),
                         SizedBox(width: 12),
-                        _buildFeatureIcon("Calendar", "assets/images/home-calendar.png"),
+                        _buildFeatureIcon("Calendar", "assets/home-calendar.png"),
                       ],
                     ),
                     SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildFeatureIcon("Plan Events", "assets/images/home-plan.png"),
+                        _buildFeatureIcon("Plan Events", "assets/home-plan.png"),
                         SizedBox(width: 12),
-                        _buildFeatureIcon("Timer", "assets/images/home-timer.png"),
+                        _buildFeatureIcon("Timer", "assets/home-timer.png"),
                       ],
                     ),
                   ],
@@ -91,9 +72,9 @@ class DashboardScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildTaskIcon("HTML", "assets/images/home-html.png"),
-                  _buildTaskIcon("CSS", "assets/images/home-css.png"),
-                  _buildTaskIcon("PHP", "assets/images/home-php.png"),
+                  _buildTaskIcon("HTML", "assets/home-html.png"),
+                  _buildTaskIcon("CSS", "assets/home-css.png"),
+                  _buildTaskIcon("PHP", "assets/home-php.png"),
                 ],
               ),
             ],
@@ -154,8 +135,8 @@ class DashboardScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildChartCard("assets/images/home-graph.png"),
-        _buildChartCard("assets/images/home-pie.png"),
+        _buildChartCard("assets/home-graph.png"),
+        _buildChartCard("assets/home-pie.png"),
       ],
     );
   }

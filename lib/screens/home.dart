@@ -4,6 +4,7 @@ import '../componments/bottom_navbar.dart';
 import '../screens/todo_view_screen.dart';
 import '../screens/event_plan.dart';
 import 'calander.dart';
+import 'dashboard.dart';
 
 
 
@@ -82,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.home, color: Colors.green),
               title: Text("Home"),
-              onTap: () => Navigator.pop(context),
+              onTap: () => _navigateToScreen(DashboardScreen()),
             ),
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
