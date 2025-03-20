@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mad_project/screens/timer.dart';
-import '../componments/bottom_navbar.dart';
+import '../screens/timer.dart';
+import '../widgets/bottom_navbar.dart';
 import '../screens/todo_view_screen.dart';
 import '../screens/event_plan.dart';
-import 'calander.dart';
-import 'dashboard.dart';
-import 'package:mad_project/screens/loginPage.dart';
+import '../screens/calander.dart';
+import '../screens/dashboard.dart';
+import '../screens/login.dart';
 
 
 
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.home, color: Colors.green),
               title: Text("Home"),
-              onTap: () => _navigateToScreen(MyWidget()),// this is dashboard later change name in dash.dart
+              onTap: () => _navigateToScreen(DashboardScreen()),
             ),
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
@@ -220,6 +220,7 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 

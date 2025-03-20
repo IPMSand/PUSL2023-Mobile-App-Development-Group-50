@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async'; // Import for delay
-import 'start03.dart'; // Import the next screen
+import '../screens/start03.dart'; // Import the next screen
 
 void main() {
   runApp(const StudyZenApp());
@@ -23,6 +23,7 @@ class Start02Screen extends StatefulWidget {
   const Start02Screen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _Start02ScreenState createState() => _Start02ScreenState();
 }
 
@@ -59,7 +60,7 @@ class _Start02ScreenState extends State<Start02Screen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/start2.png', 
+              'assets/images/start02.png', 
               height: 250,
             ),
             const SizedBox(height: 15),

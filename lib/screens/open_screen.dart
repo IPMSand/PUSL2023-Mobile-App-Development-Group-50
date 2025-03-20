@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mad_project/screens/home.dart';
+import '../screens/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'start01.dart';

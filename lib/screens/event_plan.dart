@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../componments/bottom_navbar.dart';
+import '../widgets/bottom_navbar.dart';
 
 
 class AddEventScreen extends StatefulWidget {
@@ -50,7 +50,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         child: Column(
           children: [
             Center(
-              child: Image.asset('assets/start5.png', height: 150),
+              child: Image.asset('assets/images/start5.png', height: 150),
             ),
             SizedBox(height: 10),
             Container(

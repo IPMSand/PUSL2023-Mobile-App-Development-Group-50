@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_navbar.dart';
 
-import '../componments/bottom_navbar.dart';
-
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<DashboardScreen> createState() => _MyDashboardScreen();
   
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _MyDashboardScreen extends State<DashboardScreen> {
 
    int _selectedIndex = 0;
   void _onItemTapped(int index) {
@@ -48,20 +47,20 @@ class _MyWidgetState extends State<MyWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildFeatureIcon("My Profile", "assets/home-profile.png"),
+                        _buildFeatureIcon("My Profile", "assets/images/home-profile.png"),
                         SizedBox(width: 12),
-                        _buildFeatureIcon("To Do List", "assets/home-list.png"),
+                        _buildFeatureIcon("To Do List", "assets/images/home-list.png"),
                         SizedBox(width: 12),
-                        _buildFeatureIcon("Calendar", "assets/home-calendar.png"),
+                        _buildFeatureIcon("Calendar", "assets/images/home-calendar.png"),
                       ],
                     ),
                     SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildFeatureIcon("Plan Events", "assets/home-plan.png"),
+                        _buildFeatureIcon("Plan Events", "assets/images/home-plan.png"),
                         SizedBox(width: 12),
-                        _buildFeatureIcon("Timer", "assets/home-timer.png"),
+                        _buildFeatureIcon("Timer", "assets/images/home-timer.png"),
                       ],
                     ),
                   ],
@@ -84,9 +83,9 @@ class _MyWidgetState extends State<MyWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildTaskIcon("HTML", "assets/home-html.png"),
-                  _buildTaskIcon("CSS", "assets/home-css.png"),
-                  _buildTaskIcon("PHP", "assets/home-php.png"),
+                  _buildTaskIcon("HTML", "assets/images/home-html.png"),
+                  _buildTaskIcon("CSS", "assets/images/home-css.png"),
+                  _buildTaskIcon("PHP", "assets/images/home-php.png"),
                 ],
               ),
             ],
@@ -138,8 +137,8 @@ class _MyWidgetState extends State<MyWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildChartCard("assets/home-graph.png"),
-        _buildChartCard("assets/home-pie.png"),
+        _buildChartCard("assets/images/home-graph.png"),
+        _buildChartCard("assets/images/home-pie.png"),
       ],
     );
   }

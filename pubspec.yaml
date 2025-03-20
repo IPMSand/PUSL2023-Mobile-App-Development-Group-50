@@ -70,21 +70,23 @@ flutter:
   assets:
 
 
-     - assets/start1.png
-     - assets/start2.png
-     - assets/start3.png
-     - assets/start4.png
-     - assets/start5.png
-     - assets/home-profile.png
-     - assets/home-list.png
-     - assets/home-calendar.png
-     - assets/home-plan.png
-     - assets/home-timer.png
-     - assets/home-graph.png
-     - assets/home-pie.png
-     - assets/home-html.png
-     - assets/home-css.png
-     - assets/home-php.png
+    - assets/images/start1.png
+    - assets/images/start2.png
+    - assets/images/start3.png
+    - assets/images/start4.png
+    - assets/images/start5.png
+    - assets/images/home-profile.png
+    - assets/images/home-list.png
+    - assets/images/home-calendar.png
+    - assets/images/home-plan.png
+    - assets/images/home-timer.png
+    - assets/images/home-graph.png
+    - assets/images/home-pie.png
+    - assets/images/home-html.png
+    - assets/images/home-css.png
+    - assets/images/home-php.png
+
+    - assets/logos/studyzen_logo.png
 
 
 

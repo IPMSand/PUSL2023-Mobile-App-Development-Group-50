@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mad_project/screens/home.dart';
-import 'package:mad_project/screens/loginPage.dart';
+//import '../screens/home.dart';
+import '../screens/login.dart';
 
 class Start05Screen extends StatelessWidget {
   const Start05Screen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'start04.dart'; // Import the next screen
+import '../screens/start04.dart'; // Import the next screen
 
 class Start03Screen extends StatelessWidget {
   const Start03Screen({super.key});
@@ -15,7 +15,7 @@ class Start03Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/start3.png',
+              'assets/images/start03.png',
               height: 250,
             ),
             const SizedBox(height: 15),

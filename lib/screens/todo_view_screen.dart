@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mad_project/componments/bottom_navbar.dart';
-import 'package:mad_project/models/taskclass.dart';
-import 'package:mad_project/screens/todo_create_screen.dart';
+import '../widgets/bottom_navbar.dart';
+import '../screens/todo_create_screen.dart';
+import '../servieces/models/taskclass.dart';
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -116,7 +116,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   _todoImg() {
     return Center(
       child: Image.asset(
-        'assets/start3.png',
+        'assets/images/start3.png',
         height: 120,
       ),
     );

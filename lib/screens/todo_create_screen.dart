@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../componments/bottom_navbar.dart'; 
+import '../widgets/bottom_navbar.dart'; 
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});

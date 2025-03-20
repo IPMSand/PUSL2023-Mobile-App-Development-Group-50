@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import '../screens/home.dart';
-import '../screens/RegisterPage.dart';
+import '../screens/register.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 

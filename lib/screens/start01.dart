@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'start02.dart'; // Import the start02 page
+import '../screens/start02.dart'; // Import the start02 page
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -51,7 +51,7 @@ class _StudyZenScreenState extends State<StudyZenScreen> {
               child: Column(
                 children: [
                   Image.asset(
-                    'assets/start1.png', 
+                    'assets/logos/studyzen_logo.png', 
                     height: 220,
                   ),
                   const SizedBox(height: 5),
