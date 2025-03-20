@@ -109,7 +109,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
               title: Text("Log Out", style: TextStyle(color: Colors.red)),
-              onTap: () {},
+              onTap: () {
+                  Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()), // Replace LoginScreen() with your login screen widget.
+               );
+              },
             ),
           ],
         ),
