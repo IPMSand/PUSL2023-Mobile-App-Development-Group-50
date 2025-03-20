@@ -9,8 +9,11 @@
 <h3>Future Enhancements</h3>
 <h4>Additional Notes</h4>
 <h4>Group Members</h4>
-.....
+..............
+
+
 A new Flutter project.
+
 # Future work
 - [ ] BottomNavbar icons does not rediret to any pages 
 ## Getting Started
