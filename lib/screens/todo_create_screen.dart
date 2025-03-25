@@ -65,15 +65,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
     try {
       String id = DateTime.now().millisecondsSinceEpoch.toString();
+      String userId = 'userId'; // Replace with the actual user ID
 
-      await FirebaseFirestore.instance.collection("Tasks").doc(id).set({
-        'taskName': _taskNameController.text,
-        'category': _category,
-        'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
-        'startTime': '<span class="math-inline">\{\_startTime\.hour\}\:</span>{_startTime.minute}',
-        'endTime': '<span class="math-inline">\{\_endTime\.hour\}\:</span>{_endTime.minute}',
-        'description': _descriptionController.text,
-      });
+   await FirebaseFirestore.instance.collection("Tasks").doc(id).set({
+  'taskName': _taskNameController.text,
+  'category': _category,
+  'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
+  'startTime': '${_startTime.hour}:${_startTime.minute}', // Correct formatting
+  'endTime': '${_endTime.hour}:${_endTime.minute}',   // Correct formatting
+  'description': _descriptionController.text,
+  'userId': userId,
+  'completed': 'false',
+});
 
       print('Task added to Firestore successfully!');
       Navigator.pop(context);
@@ -100,7 +103,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
-                _newCategoryController.clear(); 
+                _newCategoryController.clear();
               },
             ),
             TextButton(
@@ -109,12 +112,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 if (_newCategoryController.text.isNotEmpty) {
                   setState(() {
                     _categories.add(_newCategoryController.text);
-                    _category = _newCategoryController
-                        .text; //set new category as selected
+                    _category = _newCategoryController.text;
                   });
                   Navigator.of(context).pop();
-                  _newCategoryController
-                      .clear(); //clear the controller after add.
+                  _newCategoryController.clear();
                 }
               },
             ),

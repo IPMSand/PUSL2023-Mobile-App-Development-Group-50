@@ -6,8 +6,9 @@ class Task {
   final String category;
   final String date; // Store date as String
   final String startTime; // Store TimeOfDay as String
-  final String completed; // Store TimeOfDay as String
+  late final String completed; // Store TimeOfDay as String
   final String description;
+  String? documentId; // Add this line
 
   Task({
     required this.taskName,
@@ -16,6 +17,7 @@ class Task {
     required this.startTime,
     required this.completed,
     required this.description,
+    this.documentId,
   });
 
   @override
@@ -30,8 +32,9 @@ class Task {
       category: map['category'] ?? '',
       date: map['date'] ?? '',
       startTime: map['startTime'] ?? '',
-      completed: map['completed'] ?? '',
+      completed: map['completed'] ?? 'false',
       description: map['description'] ?? '',
+       documentId: null, // Initialize documentId to null
     );
   }
 

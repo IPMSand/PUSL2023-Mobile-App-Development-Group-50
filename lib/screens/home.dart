@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
               title: Text("To Do List"),
-              onTap: () => _navigateToScreen(CreateTaskScreen()),
+              onTap: () => _navigateToScreen(TaskListScreen()),
             ),
             ListTile(
               leading: Icon(Icons.calendar_today, color: Colors.green),
