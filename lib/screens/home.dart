@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mad_project/screens/todo_create_screen.dart';
 import '../screens/timer.dart';
 import '../widgets/bottom_navbar.dart';
 import '../screens/todo_view_screen.dart';
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
               title: Text("To Do List"),
-              onTap: () => _navigateToScreen(TaskListScreen()),
+              onTap: () => _navigateToScreen(CreateTaskScreen()),
             ),
             ListTile(
               leading: Icon(Icons.calendar_today, color: Colors.green),

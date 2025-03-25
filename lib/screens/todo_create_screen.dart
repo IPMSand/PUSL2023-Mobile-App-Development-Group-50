@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../widgets/bottom_navbar.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+
+import '../widgets/bottom_navbar.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _CreateTaskScreenState createState() => _CreateTaskScreenState();
 }
 
@@ -17,13 +18,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _newCategoryController =
-      TextEditingController(); // Controller for new category input
+  final TextEditingController _newCategoryController = TextEditingController();
   final List<String> _categories = [
     'Programming Language',
     'Assignments',
     'Exams'
-  ]; // List to hold categories.
+  ];
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -55,23 +55,34 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     }
   }
 
-  void _createTask() {
+  void _createTask() async {
     if (_taskNameController.text.trim().isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Task name cannot be empty.')),
-    );
-    return; // Stop 
-  }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Task name cannot be empty.')),
+      );
+      return;
+    }
 
-    debugPrint('Task Name: ${_taskNameController.text}');
-    debugPrint('Category: $_category');
-    debugPrint('Date: ${_selectedDate.toLocal()}');
-    debugPrint('Start Time: ${_startTime.format(context)}');
-    debugPrint('End Time: ${_endTime.format(context)}');
-    debugPrint('Description: ${_descriptionController.text}');
-    
+    try {
+      String id = DateTime.now().millisecondsSinceEpoch.toString();
 
-    Navigator.pop(context); 
+      await FirebaseFirestore.instance.collection("Tasks").doc(id).set({
+        'taskName': _taskNameController.text,
+        'category': _category,
+        'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
+        'startTime': '<span class="math-inline">\{\_startTime\.hour\}\:</span>{_startTime.minute}',
+        'endTime': '<span class="math-inline">\{\_endTime\.hour\}\:</span>{_endTime.minute}',
+        'description': _descriptionController.text,
+      });
+
+      print('Task added to Firestore successfully!');
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error adding task: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add task. Please try again.')),
+      );
+    }
   }
 
   void _addNewCategory(BuildContext context) {

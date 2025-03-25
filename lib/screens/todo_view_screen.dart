@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import '../widgets/bottom_navbar.dart';
 import '../screens/todo_create_screen.dart';
 import '../servieces/models/taskclass.dart';
+
+
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -13,14 +15,8 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   List<Task> tasks = [
-    Task(name: 'HTML', time: '09.00 AM - 11.00 AM', completed: false),
-    Task(name: 'CSS', time: '11.30 AM - 01.30 PM', completed: false),
-    Task(name: 'PHP', time: '2.00 PM - 04.00 PM', completed: false),
-    Task(name: 'QUIZ', time: '04.30 PM - 05.30 PM', completed: false),
-    Task(name: 'HTML', time: '09.00 AM - 11.00 AM', completed: false),
-    Task(name: 'CSS', time: '11.30 AM - 01.30 PM', completed: false),
-    Task(name: 'PHP', time: '2.00 PM - 04.00 PM', completed: false),
-    Task(name: 'QUIZ', time: '04.30 PM - 05.30 PM', completed: false),
+    
+
   ];
 
   List<Task> completedTasks = []; // List to store completed tasks --- later show in BtN(See All);
@@ -229,4 +225,4 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   // bottom nav bar
 }
-
+*/
