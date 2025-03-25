@@ -68,8 +68,17 @@ Future<void> _toggleTaskCompletion(int index) async {
             .doc(task.documentId!)
             .update({'completed': newCompletionStatus.toString()});
 
-        // Refresh the task list from Firestore
-        await _fetchTasks();
+        if (newCompletionStatus) {
+            // Add to completedTasks list
+            setState(() {
+                completedTasks.add(task);
+                tasks.removeAt(index);
+            });
+        } else {
+            // Refresh the task list from Firestore
+            await _fetchTasks();
+        }
+
     } catch (e) {
         print('Error toggling task completion: $e');
     }
