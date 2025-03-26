@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../widgets/bottom_navbar.dart';
 import '../screens/todo_create_screen.dart';
 import '../servieces/models/taskclass.dart';
-import 'package:intl/intl.dart';
 import '../datasourse/todo_data.dart'; // Import the new Database class
 
 class TaskListScreen extends StatefulWidget {
@@ -14,7 +13,6 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   List<Task> tasks = [];
-  List<Task> completedTasks = [];
   int originalTaskCount = 0;
   final Database _database = Database();
   String currentUserId = 'actualUserId'; // Replace with actual user ID
@@ -22,6 +20,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   void initState() {
     super.initState();
+    print('Current User ID (initState): $currentUserId'); // Log user ID
     _fetchTasks();
     _checkAndDeleteCompletedTasks();
   }
@@ -34,12 +33,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 
   Future<void> _fetchTasks() async {
+    print('Fetching tasks for user: $currentUserId'); // Log user ID
     await _database.fetchTasks(currentUserId, _updateUI);
   }
 
   double get progress {
     if (originalTaskCount == 0) return 0.0;
-    return completedTasks.length / originalTaskCount;
+    int completedCount = tasks.where((task) => task.completed == 'true').length;
+    return completedCount / originalTaskCount;
   }
 
   Future<void> _toggleTaskCompletion(int index) async {
@@ -50,28 +51,16 @@ class _TaskListScreenState extends State<TaskListScreen> {
       bool success = await _database.toggleTaskCompletion(task, newCompletionStatus);
 
       if (success) {
-        List<Task> fetchedTasks = await _database.fetchTasks(currentUserId, (fetched, count) {});
-        setState(() {
-          tasks = fetchedTasks;
-          tasks.sort((a, b) {
-            if (a.completed == 'true' && b.completed == 'false') {
-              return 1;
-            } else if (a.completed == 'false' && b.completed == 'true') {
-              return -1;
-            } else {
-              return 0;
-            }
-          });
-        });
+        _fetchTasks(); // Refresh tasks after toggling
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle task completion.')),
+          const SnackBar(content: Text('Failed to toggle task completion.')),
         );
       }
     } catch (e) {
       print('Error toggling task completion in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error toggling task completion.')),
+        const SnackBar(content: Text('Error toggling task completion.')),
       );
     }
   }
@@ -83,29 +72,30 @@ class _TaskListScreenState extends State<TaskListScreen> {
         _fetchTasks();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to remove task.')),
+          const SnackBar(content: Text('Failed to remove task.')),
         );
       }
     } catch (e) {
       print('Error removing task from Firestore in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error removing task.')),
+        const SnackBar(content: Text('Error removing task.')),
       );
     }
   }
 
   Future<void> _checkAndDeleteCompletedTasks() async {
     try {
+      print('Running checkAndDeleteCompletedTasks for user: $currentUserId'); //log userid
       bool deleteSuccess = await _database.checkAndDeleteCompletedTasks(currentUserId);
-      if (!deleteSuccess){
+      if (!deleteSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to manage completed tasks.')),
+          const SnackBar(content: Text('Failed to manage completed tasks.')),
         );
       }
     } catch (e) {
       print('Error checking and deleting completed tasks in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error managing completed tasks.')),
+        const SnackBar(content: Text('Error managing completed tasks.')),
       );
     }
   }
@@ -121,7 +111,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('To Do List'),
+        title: const Text('To Do List'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -150,15 +140,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  _topTitle() {
-    return Align(
+  Widget _topTitle() {
+    return const Align(
       alignment: Alignment.centerLeft,
       child: Text('My To-Do ',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
     );
   }
 
-  _todoImg() {
+  Widget _todoImg() {
     return Center(
       child: Image.asset(
         'assets/images/start3.png',
@@ -167,9 +157,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  _todoProgress() {
+  Widget _todoProgress() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 73, 175, 131),
         borderRadius: BorderRadius.circular(28),
@@ -183,25 +173,25 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Today\'s progress Summary',
+                    const Text('Today\'s progress Summary',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
                     Text('$originalTaskCount tasks',
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 55, 55, 55))),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 55, 55, 55))),
                   ],
                 ),
               ),
               Text('progress ${(progress * 100).toStringAsFixed(2)}%'),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SizedBox(
             width: 300,
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           ),
         ],
@@ -209,15 +199,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  _todoListTitle() {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
+  Widget _todoListTitle() {
+    return const Padding(
+      padding: EdgeInsets.all(12.0),
       child: Text('Today\'s Tasks',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
     );
   }
 
-  _todoTaskList() {
+  Widget _todoTaskList() {
     return Expanded(
       child: ListView.builder(
         itemCount: tasks.length,
@@ -232,7 +222,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               title: Text(
                 tasks[index].taskName,
                 style: tasks[index].completed == 'true'
-                    ? TextStyle(decoration: TextDecoration.lineThrough)
+                    ? const TextStyle(decoration: TextDecoration.lineThrough)
                     : null,
               ),
               subtitle: Text(tasks[index].startTime),
@@ -240,7 +230,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 onTap: () {
                   _removeTaskFromFirestore(tasks[index].documentId!);
                 },
-                child: Icon(Icons.delete),
+                child: const Icon(Icons.delete),
               ),
             ),
           );
@@ -249,7 +239,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  _todoTaskAddBtn() {
+  Widget _todoTaskAddBtn() {
     return FloatingActionButton(
       onPressed: () {
         Navigator.push(
@@ -257,8 +247,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
           MaterialPageRoute(builder: (context) => CreateTaskScreen()),
         ).then((value) => _fetchTasks());
       },
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
     );
   }
 }
+// user id
 // user id

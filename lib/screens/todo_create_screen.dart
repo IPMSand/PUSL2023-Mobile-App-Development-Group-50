@@ -70,7 +70,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   void _createTask() async {
     if (_taskNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Task name cannot be empty.')),
+        const SnackBar(content: Text('Task name cannot be empty.')),
       );
       return;
     }
@@ -78,8 +78,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     try {
       String id = DateTime.now().millisecondsSinceEpoch.toString();
       String userId = 'userId'; // Replace with the actual user ID
-    
-    // Convert TimeOfDay to 24-hour format strings..
+
+      // Convert TimeOfDay to 24-hour format strings..
       String startTime24 =
           '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}';
       String endTime24 =
@@ -101,7 +101,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     } catch (e) {
       print('Error adding task: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add task. Please try again.')),
+        const SnackBar(content: Text('Failed to add task. Please try again.')),
       );
     }
   }
@@ -111,21 +111,21 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add New Category'),
+          title: const Text('Add New Category'),
           content: TextField(
             controller: _newCategoryController,
-            decoration: InputDecoration(labelText: 'Category Name'),
+            decoration: const InputDecoration(labelText: 'Category Name'),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
                 _newCategoryController.clear();
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Add'),
               onPressed: () {
                 if (_newCategoryController.text.isNotEmpty) {
                   setState(() {
@@ -142,6 +142,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       },
     );
   }
+
  
    int _selectedIndex = 0;
   void _onItemTapped(int index) {
