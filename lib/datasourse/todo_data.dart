@@ -1,17 +1,16 @@
+// 1st code: todo_data.dart (Database Class)
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../servieces/models/taskclass.dart';
 
-// Database class to handle Firestore operations
 class Database {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Fetch tasks for a specific user and date
   Future<void> fetchTasks(
       String userId, Function(List<Task> tasks, int originalTaskCount) updateUI) async {
     try {
       String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      print('Fetching tasks for user: $userId and date: $todayDate'); // Add this log
+      print('Fetching tasks for user: $userId and date: $todayDate');
 
       QuerySnapshot querySnapshot = await _firestore
           .collection('Tasks')
@@ -22,11 +21,11 @@ class Database {
       List<Task> todayTasks = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         Task task = Task.fromMap(data);
-        task.documentId = doc.id; // Store the document ID
+        task.documentId = doc.id;
         return task;
       }).toList();
 
-      print('Fetched ${todayTasks.length} tasks'); //important log
+      print('Fetched ${todayTasks.length} tasks');
       updateUI(todayTasks, todayTasks.length);
     } on FirebaseException catch (e) {
       print('Firebase error fetching tasks: ${e.message}');
@@ -37,7 +36,6 @@ class Database {
     }
   }
 
-  // Toggle the completion status of a task
   Future<bool> toggleTaskCompletion(Task task, bool newCompletionStatus) async {
     try {
       if (task.documentId == null) {
@@ -59,7 +57,6 @@ class Database {
     }
   }
 
-  // Remove a task from Firestore
   Future<bool> removeTaskFromFirestore(String documentId) async {
     try {
       await _firestore.collection('Tasks').doc(documentId).delete();
@@ -74,7 +71,6 @@ class Database {
     }
   }
 
-  // Check and delete completed tasks older than one week
   Future<bool> checkAndDeleteCompletedTasks(String userId) async {
     try {
       print('Running checkAndDeleteCompletedTasks for user: $userId');
@@ -88,19 +84,19 @@ class Database {
           .where('date', isLessThanOrEqualTo: oneWeekAgoFormatted)
           .get();
 
-      WriteBatch batch = _firestore.batch(); // Use a batch for efficiency
+      WriteBatch batch = _firestore.batch();
 
       if (querySnapshot.docs.isEmpty) {
         print('No completed tasks older than one week to delete for user: $userId');
-        return true; // Return true if no tasks to delete
+        return true;
       }
 
       for (var doc in querySnapshot.docs) {
-        batch.delete(doc.reference); // Add delete operations to the batch
+        batch.delete(doc.reference);
         print('Deleting task with document ID: ${doc.id}');
       }
 
-      await batch.commit(); // Commit the batch
+      await batch.commit();
 
       print('Completed tasks older than one week deleted successfully for user: $userId');
       return true;
@@ -113,10 +109,8 @@ class Database {
     }
   }
 
-  //add task
-    Future<void> addTask(Task task) async {
+  Future<void> addTask(Task task) async {
     try {
-      // Add the task data to Firestore
       DocumentReference docRef = await _firestore.collection('Tasks').add(task.toMap());
       print('Task added with document ID: ${docRef.id}');
     } on FirebaseException catch (e) {
@@ -124,7 +118,7 @@ class Database {
       rethrow;
     } catch (e) {
       print('Error adding task to Firestore: $e');
-      rethrow; // Re-throw to be caught in the UI
+      rethrow;
     }
   }
 }

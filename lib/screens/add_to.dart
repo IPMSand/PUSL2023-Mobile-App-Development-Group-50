@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 
 import '../widgets/bottom_navbar.dart';
 
@@ -48,19 +49,17 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       setState(() {
         if (isStartTime) {
           _startTime = picked;
-          // Ensure endTime is after startTime
           if (_endTime.hour < _startTime.hour ||
               (_endTime.hour == _startTime.hour &&
                   _endTime.minute < _startTime.minute)) {
-            _endTime = _startTime; // Set endTime to startTime if it's before
+            _endTime = _startTime;
           }
         } else {
           _endTime = picked;
-          // Ensure endTime is after startTime..
           if (_endTime.hour < _startTime.hour ||
               (_endTime.hour == _startTime.hour &&
                   _endTime.minute < _startTime.minute)) {
-            _endTime = _startTime; // Set endTime to startTime if it's before
+            _endTime = _startTime;
           }
         }
       });
@@ -70,27 +69,31 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   void _createTask() async {
     if (_taskNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Task name cannot be empty.')),
+        SnackBar(content: Text('Task name cannot be empty.')),
       );
       return;
     }
 
     try {
       String id = DateTime.now().millisecondsSinceEpoch.toString();
-      String userId = 'userId'; // Replace with the actual user ID
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User not logged in.')),
+        );
+        return;
+      }
+      String userId = user.uid;
 
-      // Convert TimeOfDay to 24-hour format strings..
-      String startTime24 =
-          '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}';
-      String endTime24 =
-          '${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}';
-
+     String startTime24 = '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}';
+     String endTime24 = '${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}';
+     
       await FirebaseFirestore.instance.collection("Tasks").doc(id).set({
         'taskName': _taskNameController.text,
         'category': _category,
         'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
-        'startTime': startTime24, // Store in 24-hour format..
-        'endTime': endTime24, // Store in 24-hour format
+        'startTime': startTime24,
+        'endTime': endTime24,
         'description': _descriptionController.text,
         'userId': userId,
         'completed': 'false',
@@ -101,7 +104,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     } catch (e) {
       print('Error adding task: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to add task. Please try again.')),
+        SnackBar(content: Text('Failed to add task. Please try again.')),
       );
     }
   }
@@ -111,21 +114,21 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Add New Category'),
+          title: Text('Add New Category'),
           content: TextField(
             controller: _newCategoryController,
-            decoration: const InputDecoration(labelText: 'Category Name'),
+            decoration: InputDecoration(labelText: 'Category Name'),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
                 _newCategoryController.clear();
               },
             ),
             TextButton(
-              child: const Text('Add'),
+              child: Text('Add'),
               onPressed: () {
                 if (_newCategoryController.text.isNotEmpty) {
                   setState(() {
@@ -143,8 +146,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
- 
-   int _selectedIndex = 0;
+  int _selectedIndex = 0;
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -161,105 +163,92 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-
-            // task name
             _createTaskName(),
-
-            // select category
             _selectCategoryName(),
-
-            // select date and time
             _selectTaskDate(),
             _selectStartTime(),
             _selectEndTime(),
-
-            // note
             _addDescription(),
-
-            // create task btn
-            _createtaskBtn()
-,            SizedBox(height: 20),
+            _createtaskBtn(),
+            SizedBox(height: 20),
           ],
         ),
       ),
-         bottomNavigationBar: MyBottomNavigationBarWidget(
+      bottomNavigationBar: MyBottomNavigationBarWidget(
         initialIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );
   }
 
-  // widgets methods for body------
-_createTaskName() {
-  return TextField(
-    
-    controller: _taskNameController,
-    maxLength: 30, // Add max lenght later
-    decoration: InputDecoration(
-      labelText: 'Task Name',
-      labelStyle: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
+  _createTaskName() {
+    return TextField(
+      controller: _taskNameController,
+      maxLength: 30,
+      decoration: InputDecoration(
+        labelText: 'Task Name',
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+        fillColor: const Color.fromARGB(255, 49, 49, 49),
+        counterText: '',
       ),
-      fillColor: const Color.fromARGB(255, 49, 49, 49),
-      counterText: '', 
-    ),
-  );
-}
+    );
+  }
 
-Widget _selectCategoryName() {
-  return Row(
-    children: [
-      Expanded(
-        child: DropdownButton<String>(
-          value: _category,
-          items: _categories.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: 14.0, // Adjust font size
-                  fontWeight: FontWeight.w400, // Adjust font weight
-                  //color: const Color.fromARGB(255, 0, 0, 0), // Adjust text color
+  Widget _selectCategoryName() {
+    return Row(
+      children: [
+        Expanded(
+          child: DropdownButton<String>(
+            value: _category,
+            items: _categories.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _category = newValue!;
-            });
-          },
-          isExpanded: true,
-          style: TextStyle( // Style for the selected value
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _category = newValue!;
+              });
+            },
+            isExpanded: true,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: const Color.fromARGB(255, 24, 151, 75),
+            ),
+            underline: Container(
+              height: 1,
+              color: Colors.grey[300],
+            ),
+            dropdownColor: Colors.grey[100],
           ),
+        ),
+        IconButton(
           icon: Icon(
-            Icons.arrow_drop_down,
-            color: const Color.fromARGB(255, 24, 151, 75), // Change dropdown arrow color
+            Icons.add,
+            color: Colors.green,
           ),
-          underline: Container( // Remove the underline
-            height: 1,
-            color: Colors.grey[300],
-          ),
-          dropdownColor: Colors.grey[100], // Change dropdown background color
+          onPressed: () => _addNewCategory(context),
         ),
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.add,
-          color: Colors.green, // Change add icon color
-        ),
-        onPressed: () => _addNewCategory(context),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   _selectTaskDate() {
     return ListTile(
@@ -269,11 +258,12 @@ Widget _selectCategoryName() {
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
-        ), // to temp align test
+      ),
       title: Text(' ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
       trailing: Icon(
         Icons.calendar_today,
-        color: const Color.fromARGB(255, 24, 151, 75), ),
+        color: const Color.fromARGB(255, 24, 151, 75),
+      ),
       onTap: () => _selectDate(context),
     );
   }
@@ -282,14 +272,16 @@ Widget _selectCategoryName() {
     return ListTile(
       leading: Text(
         'Start Time:',
-          style: TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-        ),),
+        ),
+      ),
       title: Text(' ${_startTime.format(context)}'),
       trailing: Icon(
         Icons.access_time,
-        color: const Color.fromARGB(255, 24, 151, 75), ),
+        color: const Color.fromARGB(255, 24, 151, 75),
+      ),
       onTap: () => _selectTime(context, true),
     );
   }
@@ -298,15 +290,16 @@ Widget _selectCategoryName() {
     return ListTile(
       leading: Text(
         'End Time:',
-          style: TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
-        ),
+      ),
       title: Text(' ${_endTime.format(context)}'),
       trailing: Icon(
         Icons.access_time,
-        color: const Color.fromARGB(255, 24, 151, 75), ),
+        color: const Color.fromARGB(255, 24, 151, 75),
+      ),
       onTap: () => _selectTime(context, false),
     );
   }
@@ -316,10 +309,10 @@ Widget _selectCategoryName() {
       controller: _descriptionController,
       decoration: InputDecoration(
         labelText: 'Description',
-         labelStyle: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 14,
-      ),
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
       ),
       minLines: 2,
       maxLines: 5,
@@ -330,14 +323,15 @@ Widget _selectCategoryName() {
   _createtaskBtn() {
     return ElevatedButton(
       onPressed: _createTask,
-       style: ElevatedButton.styleFrom(
-                foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-                backgroundColor: Colors.green,
-                overlayColor: const Color.fromARGB(255, 36, 7, 255),
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                textStyle: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold)),
+      style: ElevatedButton.styleFrom(
+          foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Colors.green,
+          overlayColor: const Color.fromARGB(255, 36, 7, 255),
+          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          textStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          )),
       child: Text('Create Task'),
     );
   }

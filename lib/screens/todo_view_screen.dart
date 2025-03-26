@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_navbar.dart';
-import '../screens/todo_create_screen.dart';
+import '../screens/add_to.dart';
 import '../servieces/models/taskclass.dart';
-import '../datasourse/todo_data.dart'; // Import the new Database class
+import 'package:intl/intl.dart';
+import '../datasourse/todo_data.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -13,16 +15,30 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   List<Task> tasks = [];
+  List<Task> completedTasks = [];
   int originalTaskCount = 0;
   final Database _database = Database();
-  String currentUserId = 'actualUserId'; // Replace with actual user ID
+  String currentUserId = ''; // Initialize as empty string
 
   @override
   void initState() {
     super.initState();
-    print('Current User ID (initState): $currentUserId'); // Log user ID
-    _fetchTasks();
+    _fetchCurrentUser();
     _checkAndDeleteCompletedTasks();
+  }
+
+  Future<void> _fetchCurrentUser() async {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        setState(() {
+          currentUserId = user.uid;
+        });
+        print('Current User ID (initState): $currentUserId');
+        _fetchTasks();
+      } else {
+        print('User is currently signed out!');
+      }
+    });
   }
 
   void _updateUI(List<Task> fetchedTasks, int taskCount) {
@@ -33,37 +49,39 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 
   Future<void> _fetchTasks() async {
-    print('Fetching tasks for user: $currentUserId'); // Log user ID
-    await _database.fetchTasks(currentUserId, _updateUI);
+    if (currentUserId.isNotEmpty) {
+      await _database.fetchTasks(currentUserId, _updateUI);
+    }
   }
 
   double get progress {
     if (originalTaskCount == 0) return 0.0;
-    int completedCount = tasks.where((task) => task.completed == 'true').length;
-    return completedCount / originalTaskCount;
+    completedTasks = tasks.where((task) => task.completed == 'true').toList();
+    return completedTasks.length / originalTaskCount;
   }
 
-  Future<void> _toggleTaskCompletion(int index) async {
-    try {
-      Task task = tasks[index];
-      bool newCompletionStatus = task.completed == 'true' ? false : true;
+Future<void> _toggleTaskCompletion(int index) async {
+  try {
+    Task task = tasks[index];
+    bool newCompletionStatus = task.completed == 'true' ? false : true;
 
-      bool success = await _database.toggleTaskCompletion(task, newCompletionStatus);
+    bool success = await _database.toggleTaskCompletion(task, newCompletionStatus);
 
-      if (success) {
-        _fetchTasks(); // Refresh tasks after toggling
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to toggle task completion.')),
-        );
-      }
-    } catch (e) {
-      print('Error toggling task completion in UI: $e');
+    if (success) {
+      // Call _fetchTasks again to update the UI
+      _fetchTasks();
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error toggling task completion.')),
+        SnackBar(content: Text('Failed to toggle task completion.')),
       );
     }
+  } catch (e) {
+    print('Error toggling task completion in UI: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error toggling task completion.')),
+    );
   }
+}
 
   Future<void> _removeTaskFromFirestore(String documentId) async {
     try {
@@ -72,30 +90,31 @@ class _TaskListScreenState extends State<TaskListScreen> {
         _fetchTasks();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to remove task.')),
+          SnackBar(content: Text('Failed to remove task.')),
         );
       }
     } catch (e) {
       print('Error removing task from Firestore in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error removing task.')),
+        SnackBar(content: Text('Error removing task.')),
       );
     }
   }
 
   Future<void> _checkAndDeleteCompletedTasks() async {
     try {
-      print('Running checkAndDeleteCompletedTasks for user: $currentUserId'); //log userid
-      bool deleteSuccess = await _database.checkAndDeleteCompletedTasks(currentUserId);
-      if (!deleteSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to manage completed tasks.')),
-        );
+      if (currentUserId.isNotEmpty) {
+        bool deleteSuccess = await _database.checkAndDeleteCompletedTasks(currentUserId);
+        if (!deleteSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to manage completed tasks.')),
+          );
+        }
       }
     } catch (e) {
       print('Error checking and deleting completed tasks in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error managing completed tasks.')),
+        SnackBar(content: Text('Error managing completed tasks.')),
       );
     }
   }
@@ -111,7 +130,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('To Do List'),
+        title: Text('To Do List'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -140,15 +159,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  Widget _topTitle() {
-    return const Align(
+  _topTitle() {
+    return Align(
       alignment: Alignment.centerLeft,
       child: Text('My To-Do ',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
     );
   }
 
-  Widget _todoImg() {
+  _todoImg() {
     return Center(
       child: Image.asset(
         'assets/images/start3.png',
@@ -157,11 +176,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  Widget _todoProgress() {
+  _todoProgress() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 73, 175, 131),
+        color: const Color.fromARGB(255, 73, 175, 137),
         borderRadius: BorderRadius.circular(28),
       ),
       child: Column(
@@ -173,25 +192,25 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    const Text('Today\'s progress Summary',
+                    Text('Today\'s progress Summary',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
                     Text('$originalTaskCount tasks',
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 55, 55, 55))),
+                        style: TextStyle(
+                            color: const Color.fromARGB(255, 55, 55, 55))),
                   ],
                 ),
               ),
               Text('progress ${(progress * 100).toStringAsFixed(2)}%'),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           SizedBox(
             width: 300,
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: Colors.grey[300],
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           ),
         ],
@@ -199,15 +218,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  Widget _todoListTitle() {
-    return const Padding(
-      padding: EdgeInsets.all(12.0),
+  _todoListTitle() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
       child: Text('Today\'s Tasks',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
     );
   }
 
-  Widget _todoTaskList() {
+_todoTaskList() {
     return Expanded(
       child: ListView.builder(
         itemCount: tasks.length,
@@ -222,7 +241,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               title: Text(
                 tasks[index].taskName,
                 style: tasks[index].completed == 'true'
-                    ? const TextStyle(decoration: TextDecoration.lineThrough)
+                    ? TextStyle(decoration: TextDecoration.lineThrough)
                     : null,
               ),
               subtitle: Text(tasks[index].startTime),
@@ -230,7 +249,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 onTap: () {
                   _removeTaskFromFirestore(tasks[index].documentId!);
                 },
-                child: const Icon(Icons.delete),
+                child: Icon(Icons.delete),
               ),
             ),
           );
@@ -239,7 +258,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  Widget _todoTaskAddBtn() {
+  _todoTaskAddBtn() {
     return FloatingActionButton(
       onPressed: () {
         Navigator.push(
@@ -247,7 +266,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
           MaterialPageRoute(builder: (context) => CreateTaskScreen()),
         ).then((value) => _fetchTasks());
       },
-      child: const Icon(Icons.add),
+      child: Icon(Icons.add),
     );
   }
 }
