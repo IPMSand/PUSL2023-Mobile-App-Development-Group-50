@@ -48,8 +48,20 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       setState(() {
         if (isStartTime) {
           _startTime = picked;
+          // Ensure endTime is after startTime
+          if (_endTime.hour < _startTime.hour ||
+              (_endTime.hour == _startTime.hour &&
+                  _endTime.minute < _startTime.minute)) {
+            _endTime = _startTime; // Set endTime to startTime if it's before
+          }
         } else {
           _endTime = picked;
+          // Ensure endTime is after startTime
+          if (_endTime.hour < _startTime.hour ||
+              (_endTime.hour == _startTime.hour &&
+                  _endTime.minute < _startTime.minute)) {
+            _endTime = _startTime; // Set endTime to startTime if it's before
+          }
         }
       });
     }
@@ -66,17 +78,23 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     try {
       String id = DateTime.now().millisecondsSinceEpoch.toString();
       String userId = 'userId'; // Replace with the actual user ID
+    
+    // Convert TimeOfDay to 24-hour format strings
+      String startTime24 =
+          '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}';
+      String endTime24 =
+          '${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}';
 
-   await FirebaseFirestore.instance.collection("Tasks").doc(id).set({
-  'taskName': _taskNameController.text,
-  'category': _category,
-  'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
-  'startTime': '${_startTime.hour}:${_startTime.minute}', // Correct formatting
-  'endTime': '${_endTime.hour}:${_endTime.minute}',   // Correct formatting
-  'description': _descriptionController.text,
-  'userId': userId,
-  'completed': 'false',
-});
+      await FirebaseFirestore.instance.collection("Tasks").doc(id).set({
+        'taskName': _taskNameController.text,
+        'category': _category,
+        'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
+        'startTime': startTime24, // Store in 24-hour format
+        'endTime': endTime24, // Store in 24-hour format
+        'description': _descriptionController.text,
+        'userId': userId,
+        'completed': 'false',
+      });
 
       print('Task added to Firestore successfully!');
       Navigator.pop(context);

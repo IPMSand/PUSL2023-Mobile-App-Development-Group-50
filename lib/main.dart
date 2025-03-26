@@ -13,20 +13,4 @@ debugShowCheckedModeBanner: false,
 ));
 }
 
-/*
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'City Linker',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-      ),
-      home: const LoginScreen(),
-    );
-  }
-}*/
 // ToDO: for the first login user display start 1-5 pages......
