@@ -16,7 +16,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
   List<Task> tasks = [];
   List<Task> completedTasks = [];
   int originalTaskCount = 0;
-  final Database _database = Database(); // Instance of Database class
+  final Database _database = Database();
+  String currentUserId = 'actualUserId'; // Replace with actual user ID
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 
   Future<void> _fetchTasks() async {
-    await _database.fetchTasks(_updateUI);
+    await _database.fetchTasks(currentUserId, _updateUI);
   }
 
   double get progress {
@@ -46,24 +47,27 @@ class _TaskListScreenState extends State<TaskListScreen> {
       Task task = tasks[index];
       bool newCompletionStatus = task.completed == 'true' ? false : true;
 
-      await _database.toggleTaskCompletion(task, newCompletionStatus);
+      bool success = await _database.toggleTaskCompletion(task, newCompletionStatus);
 
-      // Refresh the task list from Firestore to reflect the updated state.
-      List<Task> fetchedTasks = await _database.fetchTasks((fetched, count) {});
-      setState(() {
-        tasks = fetchedTasks;
-
-        // Move completed task to the bottom of the list.
-        tasks.sort((a, b) {
-          if (a.completed == 'true' && b.completed == 'false') {
-            return 1; // a comes after b
-          } else if (a.completed == 'false' && b.completed == 'true') {
-            return -1; // a comes before b
-          } else {
-            return 0; // No change in order
-          }
+      if (success) {
+        List<Task> fetchedTasks = await _database.fetchTasks(currentUserId, (fetched, count) {});
+        setState(() {
+          tasks = fetchedTasks;
+          tasks.sort((a, b) {
+            if (a.completed == 'true' && b.completed == 'false') {
+              return 1;
+            } else if (a.completed == 'false' && b.completed == 'true') {
+              return -1;
+            } else {
+              return 0;
+            }
+          });
         });
-      });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to toggle task completion.')),
+        );
+      }
     } catch (e) {
       print('Error toggling task completion in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,8 +78,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   Future<void> _removeTaskFromFirestore(String documentId) async {
     try {
-      await _database.removeTaskFromFirestore(documentId);
-      _fetchTasks(); // Refresh tasks after deletion
+      bool removeSuccess = await _database.removeTaskFromFirestore(documentId);
+      if (removeSuccess) {
+        _fetchTasks();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to remove task.')),
+        );
+      }
     } catch (e) {
       print('Error removing task from Firestore in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -86,7 +96,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   Future<void> _checkAndDeleteCompletedTasks() async {
     try {
-      await _database.checkAndDeleteCompletedTasks();
+      bool deleteSuccess = await _database.checkAndDeleteCompletedTasks(currentUserId);
+      if (!deleteSuccess){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to manage completed tasks.')),
+        );
+      }
     } catch (e) {
       print('Error checking and deleting completed tasks in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -101,8 +116,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
       _selectedIndex = index;
     });
   }
-
-  // ... rest of your build method and other UI related methods
 
   @override
   Widget build(BuildContext context) {
