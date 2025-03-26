@@ -32,6 +32,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+.dart_tool
+.dart_tool/
 
 # Symbolication related
 app.*.symbols
@@ -43,3 +45,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase Specific
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+# firebase.json should be commited.
+
+# Keystore
+*.keystore
+
+# Gradle cache
+.gradle/
