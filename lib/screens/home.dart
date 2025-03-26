@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mad_project/screens/add_to.dart';
+import 'package:mad_project/screens/add_todo.dart';
 import '../screens/timer.dart';
 import '../widgets/bottom_navbar.dart';
-import '../screens/todo_view_screen.dart';
+import 'view_todo.dart';
 import '../screens/event_plan.dart';
 import '../screens/calander.dart';
 import '../screens/dashboard.dart';
