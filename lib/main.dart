@@ -4,10 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 // import 'screens/home.dart';
 // import 'screens/open_screen.dart';
 
-
-// keep this page as it. Don't put ur code here. just change which screen to open here
-// home: const HomeScreen(), // first page to open in the system
-
 Future<void> main() async {
 WidgetsFlutterBinding.ensureInitialized();
 await Firebase.initializeApp();

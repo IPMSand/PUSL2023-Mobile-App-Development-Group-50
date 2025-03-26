@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/bottom_navbar.dart';
 import '../screens/todo_create_screen.dart';
 import '../servieces/models/taskclass.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '../datasourse/todo_data.dart'; // Import the new Database class
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -15,7 +15,8 @@ class TaskListScreen extends StatefulWidget {
 class _TaskListScreenState extends State<TaskListScreen> {
   List<Task> tasks = [];
   List<Task> completedTasks = [];
-  late int originalTaskCount;
+  int originalTaskCount = 0;
+  final Database _database = Database(); // Instance of Database class
 
   @override
   void initState() {
@@ -24,32 +25,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
     _checkAndDeleteCompletedTasks();
   }
 
+  void _updateUI(List<Task> fetchedTasks, int taskCount) {
+    setState(() {
+      tasks = fetchedTasks;
+      originalTaskCount = taskCount;
+    });
+  }
+
   Future<void> _fetchTasks() async {
-    try {
-      String userId = 'userId';
-
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Tasks')
-          .where('userId', isEqualTo: userId)
-          .get();
-
-      List<Task> fetchedTasks = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        Task task = Task.fromMap(data);
-        task.documentId = doc.id; // Store the document ID
-        return task;
-      }).toList();
-
-      setState(() {
-        tasks = fetchedTasks
-            .where((task) =>
-                task.date == DateFormat('yyyy-MM-dd').format(DateTime.now()))
-            .toList();
-        originalTaskCount = tasks.length;
-      });
-    } catch (e) {
-      print('Error fetching tasks: $e');
-    }
+    await _database.fetchTasks(_updateUI);
   }
 
   double get progress {
@@ -57,59 +41,57 @@ class _TaskListScreenState extends State<TaskListScreen> {
     return completedTasks.length / originalTaskCount;
   }
 
-Future<void> _toggleTaskCompletion(int index) async {
+  Future<void> _toggleTaskCompletion(int index) async {
     try {
-        Task task = tasks[index];
-        bool newCompletionStatus = task.completed == 'true' ? false : true;
+      Task task = tasks[index];
+      bool newCompletionStatus = task.completed == 'true' ? false : true;
 
-        // Update Firestore
-        await FirebaseFirestore.instance
-            .collection('Tasks')
-            .doc(task.documentId!)
-            .update({'completed': newCompletionStatus.toString()});
+      await _database.toggleTaskCompletion(task, newCompletionStatus);
 
-        if (newCompletionStatus) {
-            // Add to completedTasks list
-            setState(() {
-                completedTasks.add(task);
-                tasks.removeAt(index);
-            });
-        } else {
-            // Refresh the task list from Firestore
-            await _fetchTasks();
-        }
+      // Refresh the task list from Firestore to reflect the updated state.
+      List<Task> fetchedTasks = await _database.fetchTasks((fetched, count) {});
+      setState(() {
+        tasks = fetchedTasks;
 
+        // Move completed task to the bottom of the list.
+        tasks.sort((a, b) {
+          if (a.completed == 'true' && b.completed == 'false') {
+            return 1; // a comes after b
+          } else if (a.completed == 'false' && b.completed == 'true') {
+            return -1; // a comes before b
+          } else {
+            return 0; // No change in order
+          }
+        });
+      });
     } catch (e) {
-        print('Error toggling task completion: $e');
+      print('Error toggling task completion in UI: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error toggling task completion.')),
+      );
     }
-}
+  }
 
   Future<void> _removeTaskFromFirestore(String documentId) async {
     try {
-      await FirebaseFirestore.instance.collection('Tasks').doc(documentId).delete();
+      await _database.removeTaskFromFirestore(documentId);
+      _fetchTasks(); // Refresh tasks after deletion
     } catch (e) {
-      print('Error removing task from Firestore: $e');
+      print('Error removing task from Firestore in UI: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error removing task.')),
+      );
     }
   }
 
   Future<void> _checkAndDeleteCompletedTasks() async {
     try {
-      String userId = 'userId';
-      DateTime oneWeekAgo = DateTime.now().subtract(Duration(days: 7));
-      String oneWeekAgoFormatted = DateFormat('yyyy-MM-dd').format(oneWeekAgo);
-
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Tasks')
-          .where('userId', isEqualTo: userId)
-          .where('completed', isEqualTo: 'true')
-          .where('date', isLessThanOrEqualTo: oneWeekAgoFormatted)
-          .get();
-
-      querySnapshot.docs.forEach((doc) {
-        doc.reference.delete();
-      });
+      await _database.checkAndDeleteCompletedTasks();
     } catch (e) {
-      print('Error checking and deleting completed tasks: $e');
+      print('Error checking and deleting completed tasks in UI: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error managing completed tasks.')),
+      );
     }
   }
 
@@ -119,6 +101,8 @@ Future<void> _toggleTaskCompletion(int index) async {
       _selectedIndex = index;
     });
   }
+
+  // ... rest of your build method and other UI related methods
 
   @override
   Widget build(BuildContext context) {
@@ -220,32 +204,37 @@ Future<void> _toggleTaskCompletion(int index) async {
     );
   }
 
- _todoTaskList() {
+  _todoTaskList() {
     return Expanded(
-        child: ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-                return Card(
-                    surfaceTintColor: const Color.fromARGB(255, 112, 191, 137),
-                    child: ListTile(
-                        leading: Checkbox(
-                            value: tasks[index].completed == 'true',
-                            onChanged: (bool? value) => _toggleTaskCompletion(index),
-                        ),
-                        title: Text(tasks[index].taskName),
-                        subtitle: Text(tasks[index].startTime),
-                        trailing: InkWell(
-                            onTap: () {
-                                debugPrint('Clikied List Trailing!!');
-                            },
-                            child: Icon(Icons.chevron_right),
-                        ),
-                    ),
-                );
-            },
-        ),
+      child: ListView.builder(
+        itemCount: tasks.length,
+        itemBuilder: (context, index) {
+          return Card(
+            surfaceTintColor: const Color.fromARGB(255, 112, 191, 137),
+            child: ListTile(
+              leading: Checkbox(
+                value: tasks[index].completed == 'true',
+                onChanged: (bool? value) => _toggleTaskCompletion(index),
+              ),
+              title: Text(
+                tasks[index].taskName,
+                style: tasks[index].completed == 'true'
+                    ? TextStyle(decoration: TextDecoration.lineThrough)
+                    : null,
+              ),
+              subtitle: Text(tasks[index].startTime),
+              trailing: InkWell(
+                onTap: () {
+                  _removeTaskFromFirestore(tasks[index].documentId!);
+                },
+                child: Icon(Icons.delete),
+              ),
+            ),
+          );
+        },
+      ),
     );
-}
+  }
 
   _todoTaskAddBtn() {
     return FloatingActionButton(
