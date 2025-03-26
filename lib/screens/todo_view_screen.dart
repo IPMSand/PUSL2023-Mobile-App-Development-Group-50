@@ -4,7 +4,7 @@ import '../screens/add_to.dart';
 import '../servieces/models/taskclass.dart';
 import 'package:intl/intl.dart';
 import '../datasourse/todo_data.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -18,7 +18,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   List<Task> completedTasks = [];
   int originalTaskCount = 0;
   final Database _database = Database();
-  String currentUserId = ''; // Initialize as empty string
+  String currentUserId = '';
 
   @override
   void initState() {
@@ -60,28 +60,27 @@ class _TaskListScreenState extends State<TaskListScreen> {
     return completedTasks.length / originalTaskCount;
   }
 
-Future<void> _toggleTaskCompletion(int index) async {
-  try {
-    Task task = tasks[index];
-    bool newCompletionStatus = task.completed == 'true' ? false : true;
+  Future<void> _toggleTaskCompletion(int index) async {
+    try {
+      Task task = tasks[index];
+      bool newCompletionStatus = task.completed == 'true' ? false : true;
 
-    bool success = await _database.toggleTaskCompletion(task, newCompletionStatus);
+      bool success = await _database.toggleTaskCompletion(task, newCompletionStatus);
 
-    if (success) {
-      // Call _fetchTasks again to update the UI
-      _fetchTasks();
-    } else {
+      if (success) {
+        _fetchTasks();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to toggle task completion.')),
+        );
+      }
+    } catch (e) {
+      print('Error toggling task completion in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to toggle task completion.')),
+        SnackBar(content: Text('Error toggling task completion.')),
       );
     }
-  } catch (e) {
-    print('Error toggling task completion in UI: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error toggling task completion.')),
-    );
   }
-}
 
   Future<void> _removeTaskFromFirestore(String documentId) async {
     try {
@@ -226,7 +225,7 @@ Future<void> _toggleTaskCompletion(int index) async {
     );
   }
 
-_todoTaskList() {
+  _todoTaskList() {
     return Expanded(
       child: ListView.builder(
         itemCount: tasks.length,
@@ -244,7 +243,40 @@ _todoTaskList() {
                     ? TextStyle(decoration: TextDecoration.lineThrough)
                     : null,
               ),
-              subtitle: Text(tasks[index].startTime),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Start: ${tasks[index].startTime ?? ''}'),
+                  Text('End: ${tasks[index].endTime ?? ''}'),
+                ],
+              ),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(tasks[index].taskName),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text('Date: ${tasks[index].date ?? ''}'),
+                            Text('Category: ${tasks[index].category ?? ''}'),
+                            Text('Description: ${tasks[index].description ?? ''}'),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                      child: Text('Close'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               trailing: InkWell(
                 onTap: () {
                   _removeTaskFromFirestore(tasks[index].documentId!);

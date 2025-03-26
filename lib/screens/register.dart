@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import '../servieces/models/personpainterclass.dart';
+import '../widgets/personpainterclass.dart';
 import '../widgets/buildformfiled.dart';
 import 'package:email_validator/email_validator.dart'; // import email validator
 
