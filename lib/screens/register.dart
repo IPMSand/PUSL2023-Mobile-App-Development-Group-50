@@ -11,8 +11,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _profilePictureController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _profilePictureController = TextEditingController(); // Keep this, we just won't use it in the form.
 
   @override
   void dispose() {
@@ -20,7 +19,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _profilePictureController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
@@ -75,16 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _passwordController,
                     isPassword: true,
                   ),
-                  buildFormField(
-                    label: 'Profile Picture',
-                    controller: _profilePictureController,
-                    suffix: const Icon(Icons.upload_file, color: Colors.grey),
-                  ),
-                  buildFormField(
-                    label: 'Phone Number',
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                  ),
+                  // Removed the Phone Number field.
                   const SizedBox(height: 10),
                   // Register button
                   SizedBox(
@@ -93,6 +82,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         // Registration functionality would go here
+                        // Access the entered data using the controllers:
+                        String name = _nameController.text;
+                        String email = _emailController.text;
+                        String password = _passwordController.text;
+                        String? profilePicture = _profilePictureController.text; //still available
+
+                        // You can now use these values to create a user account.
+                        print('Name: $name, Email: $email, Password: $password, Profile Picture: $profilePicture');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2D4059),
@@ -171,7 +168,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: '',
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
-              vertical: 16,
+              vertical: 5,
             ),
             suffixIcon: suffix,
           ),
@@ -319,5 +316,6 @@ class PersonPainter extends CustomPainter {
     return false;
   }
 }
+
 // TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
     //Try replacing the use of the deprecated member with the replacement.
