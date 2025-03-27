@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/bottom_navbar.dart';
-
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _AddEventScreenState createState() => _AddEventScreenState();
 }
 
@@ -31,6 +30,43 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
   }
 
+  void _saveEvent() async {
+    String title = titleController.text.trim();
+    String note = noteController.text.trim();
+    Timestamp date = Timestamp.fromDate(selectedDate);
+
+    if (title.isEmpty || note.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter title and note')),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance.collection('events').add({
+        'title': title,
+        'note': note,
+        'date': date,
+        'createdAt': Timestamp.now(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Event saved successfully')),
+      );
+
+      // Clear fields after saving
+      titleController.clear();
+      noteController.clear();
+      setState(() {
+        selectedDate = DateTime.now();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving event: $e')),
+      );
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -41,7 +77,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-       appBar: AppBar(
+      appBar: AppBar(
         title: Text('Event'),
         backgroundColor: Colors.greenAccent,
       ),
@@ -96,18 +132,17 @@ class _AddEventScreenState extends State<AddEventScreen> {
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: _saveEvent,
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: Text('Save', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
       ),
-    bottomNavigationBar: MyBottomNavigationBarWidget(
+      bottomNavigationBar: MyBottomNavigationBarWidget(
         initialIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );
   }
 }
-// TODo: Bottomnav bar here is cutstom desigend, try using bottom_navbar.dart widget calling..
