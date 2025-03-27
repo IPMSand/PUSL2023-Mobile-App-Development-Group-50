@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import '../widgets/personpainterclass.dart';
-import '../widgets/buildformfiled.dart';
 import 'package:email_validator/email_validator.dart'; // import email validator
 
 class RegisterScreen extends StatefulWidget {
@@ -303,6 +301,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ],
     );
+  }
+}
+// Custom painter class for drawing the person icon
+class PersonPainter extends CustomPainter {
+  final Color color;
+
+  PersonPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    // Head
+    canvas.drawCircle(
+        Offset(size.width / 2, size.height / 4), size.width / 3, paint);
+
+    // Body
+    canvas.drawRect(
+      Rect.fromCenter(
+        center: Offset(size.width / 2, size.height / 2 + 10),
+        width: size.width / 2,
+        height: size.height / 2,
+      ),
+      paint,
+    );
+
+    // Legs
+    canvas.drawRect(
+      Rect.fromLTWH(
+        size.width / 4,
+        size.height,
+        size.width / 6,
+        size.height / 3,
+      ),
+      paint,
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(
+        size.width / 2 + size.width / 6,
+        size.height,
+        size.width / 6,
+        size.height / 3,
+      ),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
 
