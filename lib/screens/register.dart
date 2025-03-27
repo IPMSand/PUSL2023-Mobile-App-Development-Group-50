@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
+import '../widgets/personpainterclass.dart';
+import '../widgets/buildformfiled.dart';
+import 'package:email_validator/email_validator.dart'; // import email validator
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -11,17 +17,73 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _profilePictureController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance; // Firebase Auth instance
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _profilePictureController.dispose();
-    _phoneController.dispose();
     super.dispose();
+  }
+
+  bool _validateInput() {
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter your name.')));
+      return false;
+    }
+
+    if (email.isEmpty || !EmailValidator.validate(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a valid email address.')));
+      return false;
+    }
+
+    if (password.isEmpty || password.length < 8 || password.length > 20) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Password must be between 8 and 20 characters.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _registerUser() async {
+    if (!_validateInput()) return; // Validation check
+
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      // Store additional user data in Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'name': _nameController.text,
+        'email': _emailController.text,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration successful!')),
+      );
+
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error registering user: ${e.message}')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occurred: $e')),
+      );
+    }
   }
 
   @override
@@ -53,13 +115,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // Registration illustration
                   SizedBox(
                     height: 100,
                     child: buildRegisterIllustration(),
                   ),
                   const SizedBox(height: 10),
-                  // Form fields
                   buildFormField(
                     label: 'Your Name',
                     controller: _nameController,
@@ -75,24 +135,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _passwordController,
                     isPassword: true,
                   ),
-                  buildFormField(
-                    label: 'Profile Picture',
-                    controller: _profilePictureController,
-                    suffix: const Icon(Icons.upload_file, color: Colors.grey),
-                  ),
-                  buildFormField(
-                    label: 'Phone Number',
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                  ),
                   const SizedBox(height: 10),
-                  // Register button
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Registration functionality would go here
+                        _registerUser(); // Call the register function
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2D4059),
@@ -110,7 +159,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // Login link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -122,7 +170,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Login navigation would go here
                           Navigator.pop(context);
                         },
                         child: const Text(
@@ -145,47 +192,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget buildFormField({
-    required String label,
-    required TextEditingController controller,
-    bool isPassword = false,
-    TextInputType keyboardType = TextInputType.text,
-    Widget? suffix,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          obscureText: isPassword,
-          keyboardType: keyboardType,
-          decoration: InputDecoration(
-            hintText: '',
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-            suffixIcon: suffix,
-          ),
-        ),
-        const SizedBox(height: 5),
-      ],
-    );
-  }
-
   Widget buildRegisterIllustration() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Main form/document
         Container(
           width: 100,
           height: 120,
@@ -195,7 +205,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           child: Stack(
             children: [
-              // Form lines
               Align(
                 alignment: Alignment.center,
                 child: Column(
@@ -230,7 +239,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
               ),
-              // Checkmark icon at top
               Positioned(
                 top: 20,
                 left: 0,
@@ -238,7 +246,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Container(
                   width: 30,
                   height: 30,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
@@ -252,7 +260,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ],
           ),
         ),
-        // Person illustrations
         const SizedBox(width: 5),
         CustomPaint(
           size: const Size(40, 120),
@@ -263,61 +270,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
-// Custom painter for the person illustrations
-class PersonPainter extends CustomPainter {
-  final Color color;
-
-  PersonPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    // Head
-    canvas.drawCircle(
-      Offset(size.width * 0.5, size.height * 0.2),
-      size.width * 0.15,
-      paint,
-    );
-
-    // Body
-    final Path path = Path()
-      ..moveTo(size.width * 0.4, size.height * 0.3)
-      ..lineTo(size.width * 0.3, size.height * 0.8)
-      ..lineTo(size.width * 0.7, size.height * 0.8)
-      ..lineTo(size.width * 0.6, size.height * 0.3)
-      ..close();
-
-    canvas.drawPath(path, paint);
-
-    // Arms
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width * 0.2,
-        size.height * 0.4,
-        size.width * 0.2,
-        size.height * 0.1,
-      ),
-      paint,
-    );
-
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width * 0.6,
-        size.height * 0.4,
-        size.width * 0.2,
-        size.height * 0.1,
-      ),
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
+// TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
+    // helen@g.com
+    // HHelon@123
 // TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
     //Try replacing the use of the deprecated member with the replacement.

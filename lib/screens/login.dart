@@ -1,12 +1,15 @@
-// ignore_for_file: file_names
+// backend ok
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:email_validator/email_validator.dart';
 import '../screens/home.dart';
-import '../screens/register.dart';
+import 'register.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -19,6 +22,64 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loginUser(BuildContext context) async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    if (email.isEmpty || !EmailValidator.validate(email)) {
+      _showSnackBar(context, 'Please enter a valid email address.');
+      return;
+    }
+
+    if (password.isEmpty) {
+      _showSnackBar(context, 'Please enter a password.');
+      return;
+    }
+
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'Login failed.';
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'No user found for that email.';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Wrong password provided for that user.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'The email address is not valid.';
+          break;
+        case 'user-disabled':
+          errorMessage = 'This user has been disabled.';
+          break;
+        default:
+          errorMessage = 'An unexpected error occurred: ${e.message}';
+      }
+      _showSnackBar(context, errorMessage);
+    } catch (e) {
+      _showSnackBar(context, 'An unexpected error occurred: $e');
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message,
+      {Duration? duration}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(message),
+          duration: duration ?? const Duration(seconds: 3)),
+    );
   }
 
   @override
@@ -121,7 +182,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Colors.transparent,
                             ),
                             child: CustomPaint(
-                              painter: PersonPainter(color: Colors.blue[700]!),
+                              painter: PersonPainter(
+                                  color: Colors.blue[700]!), // Pass the color
                             ),
                           ),
                         ),
@@ -135,7 +197,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Colors.transparent,
                             ),
                             child: CustomPaint(
-                              painter: PersonPainter(color: Colors.red[400]!),
+                              painter: PersonPainter(
+                                  color: Colors.red[400]!), // Pass the color.
                             ),
                           ),
                         ),
@@ -193,7 +256,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             shape: const CircleBorder(),
                             onChanged: (value) {
                               setState(() {
-                                _rememberMe = value ?? false;
+                                _rememberMe = value ??
+                                    false; //handle null value, though it will not happen.
                               });
                             },
                           ),
@@ -209,13 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Login functionality would go here
-                              Navigator.pushReplacement<void, void>(
-                             context,
-                             MaterialPageRoute<void>(
-                            builder: (BuildContext context) => const HomeScreen(),
-                            ),
-                          );
+                            _loginUser(context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2D4059),
@@ -245,11 +303,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             onPressed: () {
                               // Sign up navigation would go here
-                                 Navigator.push(
-                            context,
-                          MaterialPageRoute(builder: (context) => RegisterScreen()), // Replace NewPage() with your target page widget
-                          );
-                         },
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RegisterScreen(), // Use the correct class name
+                                ),
+                              );
+                            },
                             child: const Text(
                               'Sign Up',
                               style: TextStyle(
@@ -273,7 +334,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// Custom painter for the person illustrations
+// Custom painter class for drawing the person icon
 class PersonPainter extends CustomPainter {
   final Color color;
 
@@ -281,51 +342,47 @@ class PersonPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
+    final paint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
 
     // Head
     canvas.drawCircle(
-      Offset(size.width * 0.5, size.height * 0.2),
-      size.width * 0.15,
-      paint,
-    );
+        Offset(size.width / 2, size.height / 4), size.width / 3, paint);
 
     // Body
-    final Path path = Path()
-      ..moveTo(size.width * 0.4, size.height * 0.3)
-      ..lineTo(size.width * 0.3, size.height * 0.8)
-      ..lineTo(size.width * 0.7, size.height * 0.8)
-      ..lineTo(size.width * 0.6, size.height * 0.3)
-      ..close();
-
-    canvas.drawPath(path, paint);
-
-    // Arms
     canvas.drawRect(
-      Rect.fromLTWH(
-        size.width * 0.2,
-        size.height * 0.4,
-        size.width * 0.2,
-        size.height * 0.1,
+      Rect.fromCenter(
+        center: Offset(size.width / 2, size.height / 2 + 10),
+        width: size.width / 2,
+        height: size.height / 2,
       ),
       paint,
     );
 
+    // Legs
     canvas.drawRect(
       Rect.fromLTWH(
-        size.width * 0.6,
-        size.height * 0.4,
-        size.width * 0.2,
-        size.height * 0.1,
+        size.width / 4,
+        size.height,
+        size.width / 6,
+        size.height / 3,
+      ),
+      paint,
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(
+        size.width / 2 + size.width / 6,
+        size.height,
+        size.width / 6,
+        size.height / 3,
       ),
       paint,
     );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+  bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
   }
 }
