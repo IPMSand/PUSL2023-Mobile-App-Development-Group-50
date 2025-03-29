@@ -1,5 +1,6 @@
-// this page works after adding firbase to the project
+// todo main screen
 import 'package:flutter/material.dart';
+import '../screens/allview_todo.dart';
 import '../widgets/bottom_navbar.dart';
 import 'add_todo.dart';
 import '../servieces/models/todo_taks_class.dart';
@@ -130,7 +131,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('To Do List'),
+        title: Text('My TO DO'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -138,13 +139,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _topTitle(),
+           // _topTitle(),
             _todoImg(),
             _todoProgress(),
+           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _todoListTitle(),
+                _viewAll(),
               ],
             ),
             _todoTaskList(),
@@ -226,6 +229,20 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
+  _viewAll() {
+    return TextButton(
+      onPressed: () {
+        debugPrint('Clicked! see all');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AllTasksScreen()),
+        );
+      },
+      child: Text('See All'),
+    );
+  }
+
+
   _todoTaskList() {
     return Expanded(
       child: ListView.builder(
@@ -233,58 +250,60 @@ class _TaskListScreenState extends State<TaskListScreen> {
         itemBuilder: (context, index) {
           return Card(
             surfaceTintColor: const Color.fromARGB(255, 112, 191, 137),
-            child: ListTile(
-              leading: Checkbox(
-                value: tasks[index].completed == 'true',
-                onChanged: (bool? value) => _toggleTaskCompletion(index),
-              ),
-              title: Text(
-                tasks[index].taskName,
-                style: tasks[index].completed == 'true'
-                    ? TextStyle(decoration: TextDecoration.lineThrough)
-                    : null,
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Start: ${tasks[index].startTime ?? ''}'),
-                  Text('End: ${tasks[index].endTime ?? ''}'),
-                ],
-              ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(tasks[index].taskName),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            Text('Date: ${tasks[index].date ?? ''}'),
-                            Text('Category: ${tasks[index].category ?? ''}'),
-                            Text('Description: ${tasks[index].description ?? ''}'),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                      child: Text('Close'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              trailing: InkWell(
-                onTap: () {
-                  _removeTaskFromFirestore(tasks[index].documentId!);
-                },
-                child: Icon(Icons.delete),
-              ),
+                   child: ListTile(
+            leading: Checkbox(
+            value: tasks[index].completed == 'true',
+            onChanged: (bool? value) => _toggleTaskCompletion(index),
             ),
+          title: Text(
+            tasks[index].taskName,
+            style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: tasks[index].completed == 'true' ? Colors.grey : const Color.fromARGB(255, 124, 11, 122), 
+            decoration: tasks[index].completed == 'true' ? TextDecoration.lineThrough : null,
+            ),
+          ),
+           subtitle: Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+              Row( 
+                children: [
+                   Text('Start: ${tasks[index].startTime ?? ''}'),
+                   SizedBox(width: 10), 
+                   Text('End: ${tasks[index].endTime ?? ''}'),
+                 ],
+              ),
+         ],
+        ),
+       onTap: () {
+         showDialog(
+           context: context,
+           builder: (BuildContext context) {
+              return AlertDialog(
+              title: Text(tasks[index].taskName),
+              content: SingleChildScrollView(
+               child: ListBody(
+                   children: <Widget>[
+                  Text('Date: ${tasks[index].date ?? ''}'),
+                  Text('Category: ${tasks[index].category ?? ''}'),
+                  Text('Description: ${tasks[index].description ?? ''}'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  },
+),
+           
           );
         },
       ),
@@ -303,5 +322,4 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 }
-// user id
 // user id

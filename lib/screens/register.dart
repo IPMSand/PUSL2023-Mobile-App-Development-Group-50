@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import 'package:email_validator/email_validator.dart'; // import email validator
+import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:email_validator/email_validator.dart'; 
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -359,5 +359,3 @@ class PersonPainter extends CustomPainter {
 // TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
     // helen@g.com
     // HHelon@123
-// TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
-    //Try replacing the use of the deprecated member with the replacement.

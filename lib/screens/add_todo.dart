@@ -1,12 +1,14 @@
+// create new task screen
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
-
+import 'package:firebase_auth/firebase_auth.dart'; 
 import '../widgets/bottom_navbar.dart';
 
 class CreateTaskScreen extends StatefulWidget {
-  const CreateTaskScreen({super.key});
+  
+  
+  const CreateTaskScreen({super.key,});
 
   @override
   _CreateTaskScreenState createState() => _CreateTaskScreenState();
@@ -85,15 +87,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       }
       String userId = user.uid;
 
-     String startTime24 = '${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}';
-     String endTime24 = '${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}';
-     
+      String startTimeAmPm = _startTime.format(context);
+      String endTimeAmPm = _endTime.format(context);
+
       await FirebaseFirestore.instance.collection("Tasks").doc(id).set({
         'taskName': _taskNameController.text,
         'category': _category,
         'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
-        'startTime': startTime24,
-        'endTime': endTime24,
+        'startTime': startTimeAmPm,
+        'endTime': endTimeAmPm,
         'description': _descriptionController.text,
         'userId': userId,
         'completed': 'false',
