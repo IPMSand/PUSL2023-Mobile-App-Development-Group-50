@@ -1,6 +1,6 @@
-// this page works after adding firbase to the project
+// todo main screen
 import 'package:flutter/material.dart';
-import 'package:mad_project/screens/allview_todo.dart';
+import '../screens/allview_todo.dart';
 import '../widgets/bottom_navbar.dart';
 import 'add_todo.dart';
 import '../servieces/models/todo_taks_class.dart';
@@ -320,5 +320,4 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 }
-// user id
 // user id
