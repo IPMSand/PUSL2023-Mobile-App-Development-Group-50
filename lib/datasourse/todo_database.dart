@@ -6,6 +6,7 @@ import '../servieces/models/todo_taks_class.dart';
 class Database {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+ // for view now page
   Future<void> fetchTasks(
       String userId, Function(List<Task> tasks, int originalTaskCount) updateUI) async {
     try {
@@ -36,6 +37,7 @@ class Database {
     }
   }
 
+ // for view now page
   Future<bool> toggleTaskCompletion(Task task, bool newCompletionStatus) async {
     try {
       if (task.documentId == null) {
@@ -57,6 +59,7 @@ class Database {
     }
   }
 
+ // for view now page
   Future<bool> removeTaskFromFirestore(String documentId) async {
     try {
       await _firestore.collection('Tasks').doc(documentId).delete();
@@ -71,6 +74,7 @@ class Database {
     }
   }
 
+  // for viewnow page
   Future<bool> checkAndDeleteCompletedTasks(String userId) async {
     try {
       print('Running checkAndDeleteCompletedTasks for user: $userId');
@@ -109,6 +113,7 @@ class Database {
     }
   }
 
+ // for add task sccreen
   Future<void> addTask(Task task) async {
     try {
       DocumentReference docRef = await _firestore.collection('Tasks').add(task.toMap());
@@ -123,7 +128,7 @@ class Database {
   }
 
 
-   // New function to fetch all tasks
+   // New function to fetch all tasks for allview task screen
   Future<void> fetchAllTasks(String userId, Function(List<Task> tasks) updateUI) async {
     try {
       print('Fetching all tasks for user: $userId');

@@ -32,6 +32,9 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
       } else {
         print('User is currently signed out!');
       }
+    }, onError: (error) {
+      print('Error listening to auth state: $error');
+      _showSnackBar('Error listening to authentication status.');
     });
   }
 
@@ -43,7 +46,12 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
 
   Future<void> _fetchTasks() async {
     if (currentUserId.isNotEmpty) {
-      await _database.fetchAllTasks(currentUserId, _updateUI);
+      try {
+        await _database.fetchAllTasks(currentUserId, _updateUI);
+      } catch (e) {
+        print('Error fetching tasks: $e');
+        _showSnackBar('Failed to fetch tasks.');
+      }
     }
   }
 
@@ -57,15 +65,11 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
       if (success) {
         _fetchTasks();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle task completion.')),
-        );
+        _showSnackBar('Failed to toggle task completion.');
       }
     } catch (e) {
       print('Error toggling task completion in UI: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error toggling task completion.')),
-      );
+      _showSnackBar('Error toggling task completion.');
     }
   }
 
@@ -75,20 +79,23 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
       if (removeSuccess) {
         _fetchTasks();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to remove task.')),
-        );
+        _showSnackBar('Failed to remove task.');
       }
     } catch (e) {
       print('Error removing task from Firestore in UI: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error removing task.')),
-      );
+      _showSnackBar('Error removing task.');
     }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // ... (Your existing build method) ...
     Map<String, List<Task>> tasksByCategory = {};
     for (var task in tasks) {
       if (tasksByCategory.containsKey(task.category)) {
@@ -127,10 +134,9 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                   Task task = categoryTasks[taskIndex];
                   return Card(
                     surfaceTintColor: const Color.fromARGB(255, 112, 191, 137),
-                     // Also set color to light green
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255)), // Slightly darker green border
+                      side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255)),
                     ),
                     child: ListTile(
                       leading: Checkbox(
@@ -146,6 +152,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                       ),
                       subtitle: Text('Date: ${task.date ?? ''}'),
                       onTap: () {
+                        // ... (Your existing onTap dialog) ...
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

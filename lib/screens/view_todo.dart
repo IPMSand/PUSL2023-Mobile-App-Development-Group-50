@@ -131,7 +131,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('To Do List'),
+        title: Text('My TO DO'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -139,9 +139,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _topTitle(),
+           // _topTitle(),
             _todoImg(),
             _todoProgress(),
+           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
