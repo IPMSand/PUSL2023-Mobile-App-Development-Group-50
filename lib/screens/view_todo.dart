@@ -1,5 +1,6 @@
 // this page works after adding firbase to the project
 import 'package:flutter/material.dart';
+import 'package:mad_project/screens/allview_todo.dart';
 import '../widgets/bottom_navbar.dart';
 import 'add_todo.dart';
 import '../servieces/models/todo_taks_class.dart';
@@ -145,6 +146,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _todoListTitle(),
+                _viewAll(),
               ],
             ),
             _todoTaskList(),
@@ -225,6 +227,20 @@ class _TaskListScreenState extends State<TaskListScreen> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
     );
   }
+
+  _viewAll() {
+    return TextButton(
+      onPressed: () {
+        debugPrint('Clicked! see all');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AllTasksScreen()),
+        );
+      },
+      child: Text('See All'),
+    );
+  }
+
 
   _todoTaskList() {
     return Expanded(
