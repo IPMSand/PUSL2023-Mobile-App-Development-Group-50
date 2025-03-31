@@ -8,8 +8,10 @@
 - Backend: Firebase
 - Android version:
 - Device: Google Pixel 4 API 35
+  
 <h3>Key Features</h3>
-- To-Do List 
+
+- To-Do List
 - Event Planner
 - Calendar
 - Study Focus Timmer
