@@ -1,7 +1,7 @@
 // view all the tasks screen
 import 'package:flutter/material.dart';
-import '../servieces/models/todo_taks_class.dart';
-import '../datasourse/todo_database.dart';
+import '../models/todo_taks_class.dart';
+import '../database/todo_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AllTasksScreen extends StatefulWidget {
@@ -28,13 +28,13 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
         setState(() {
           currentUserId = user.uid;
         });
-        print('Current User ID (initState): $currentUserId');
+         debugPrint('Current User ID (initState): $currentUserId');
         _fetchTasks();
       } else {
-        print('User is currently signed out!');
+        debugPrint('User is currently signed out!');
       }
     }, onError: (error) {
-      print('Error listening to auth state: $error');
+       debugPrint('Error listening to auth state: $error');
       _showSnackBar('Error listening to authentication status.');
     });
   }
@@ -50,7 +50,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
       try {
         await _database.fetchAllTasks(currentUserId, _updateUI);
       } catch (e) {
-        print('Error fetching tasks: $e');
+         debugPrint('Error fetching tasks: $e');
         _showSnackBar('Failed to fetch tasks.');
       }
     }
@@ -69,7 +69,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
         _showSnackBar('Failed to toggle task completion.');
       }
     } catch (e) {
-      print('Error toggling task completion in UI: $e');
+       debugPrint('Error toggling task completion in UI: $e');
       _showSnackBar('Error toggling task completion.');
     }
   }
@@ -83,7 +83,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
         _showSnackBar('Failed to remove task.');
       }
     } catch (e) {
-      print('Error removing task from Firestore in UI: $e');
+       debugPrint('Error removing task from Firestore in UI: $e');
       _showSnackBar('Error removing task.');
     }
   }
@@ -96,7 +96,6 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ... (Your existing build method) ...
     Map<String, List<Task>> tasksByCategory = {};
     for (var task in tasks) {
       if (tasksByCategory.containsKey(task.category)) {
@@ -108,7 +107,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Tasks'),
+        title: Text('My All Tasks'),
         backgroundColor: Colors.greenAccent,
       ),
       body: ListView.builder(
@@ -153,7 +152,6 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                       ),
                       subtitle: Text('Date: ${task.date ?? ''}'),
                       onTap: () {
-                        // ... (Your existing onTap dialog) ...
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

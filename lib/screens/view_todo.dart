@@ -1,11 +1,9 @@
-// todo main screen
 import 'package:flutter/material.dart';
+import 'package:mad_project/widgets/colored_bottom_nav.dart';
 import '../screens/allview_todo.dart';
-import '../widgets/bottom_navbar.dart';
-import 'add_todo.dart';
-import '../servieces/models/todo_taks_class.dart';
-import 'package:intl/intl.dart';
-import '../datasourse/todo_database.dart';
+import '../screens/add_todo.dart';
+import '../models/todo_taks_class.dart';
+import '../database/todo_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class TaskListScreen extends StatefulWidget {
@@ -38,8 +36,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
         print('Current User ID (initState): $currentUserId');
         _fetchTasks();
       } else {
-        print('User is currently signed out!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User is not logged in. Please log in.')),
+        );
       }
+    }, onError: (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching user. Please check your connection.')),
+      );
     });
   }
 
@@ -52,7 +56,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   Future<void> _fetchTasks() async {
     if (currentUserId.isNotEmpty) {
-      await _database.fetchTasks(currentUserId, _updateUI);
+      try {
+        await _database.fetchTasks(currentUserId, _updateUI);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load tasks. Please try again.')),
+        );
+      }
     }
   }
 
@@ -73,13 +83,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
         _fetchTasks();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle task completion.')),
+          SnackBar(content: Text('Failed to update task status. Please try again.')),
         );
       }
     } catch (e) {
       print('Error toggling task completion in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error toggling task completion.')),
+        SnackBar(content: Text('An unexpected error occurred. Please try again.')),
       );
     }
   }
@@ -91,13 +101,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
         _fetchTasks();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to remove task.')),
+          SnackBar(content: Text('Failed to remove task. Please try again.')),
         );
       }
     } catch (e) {
       print('Error removing task from Firestore in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error removing task.')),
+        SnackBar(content: Text('An unexpected error occurred. Please try again.')),
       );
     }
   }
@@ -108,14 +118,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
         bool deleteSuccess = await _database.checkAndDeleteCompletedTasks(currentUserId);
         if (!deleteSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to manage completed tasks.')),
+            SnackBar(content: Text('Failed to manage completed tasks. Please try again.')),
           );
         }
       }
     } catch (e) {
       print('Error checking and deleting completed tasks in UI: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error managing completed tasks.')),
+        SnackBar(content: Text('An unexpected error occurred. Please try again.')),
       );
     }
   }
@@ -131,7 +141,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My TO DO'),
+        title: Text('My To-Do Tasks'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -139,10 +149,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-           // _topTitle(),
+            _topTitle(),
             _todoImg(),
             _todoProgress(),
-           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -155,17 +164,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: MyBottomNavigationBarWidget(
-        initialIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+      bottomNavigationBar: ColoredBottomBar(),
     );
   }
 
   _topTitle() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Text('My To-Do ',
+      child: Text('My Day ',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
     );
   }

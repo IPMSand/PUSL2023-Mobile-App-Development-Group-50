@@ -1,7 +1,7 @@
 // 1st code: todo_data.dart (Database Class)---this page works after adding firbase to the project
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import '../servieces/models/todo_taks_class.dart';
+import '../models/todo_taks_class.dart';
 
 class Database {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

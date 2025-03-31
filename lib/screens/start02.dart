@@ -3,21 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:async'; // Import for delay
 import '../screens/start03.dart'; // Import the next screen
 
-void main() {
-  runApp(const StudyZenApp());
-}
-
-class StudyZenApp extends StatelessWidget {
-  const StudyZenApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const Start02Screen(),
-    );
-  }
-}
 
 class Start02Screen extends StatefulWidget {
   const Start02Screen({super.key});

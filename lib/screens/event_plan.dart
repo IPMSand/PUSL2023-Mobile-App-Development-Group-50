@@ -1,10 +1,7 @@
-//---- final version-------
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../widgets/bottom_navbar.dart';
+import '../widgets/colored_bottom_nav.dart';
+import '../database/event_database.dart'; // Import the database file
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
@@ -19,6 +16,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedStartTime = TimeOfDay.now();
   int _selectedIndex = 0;
+  final EventDatabase _eventDatabase = EventDatabase(); //Instance of the database class
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -49,9 +47,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
   void _saveEvent() async {
     String title = titleController.text.trim();
     String note = noteController.text.trim();
-    String? userId = FirebaseAuth.instance.currentUser?.uid;
-    Timestamp date = Timestamp.fromDate(selectedDate);
-    String startTime = DateFormat('hh:mm a').format(DateTime(2020).add(Duration(hours: selectedStartTime.hour, minutes: selectedStartTime.minute)));
+    String startTime = DateFormat('hh:mm a')
+        .format(DateTime(2020).add(Duration(
+            hours: selectedStartTime.hour,
+            minutes: selectedStartTime.minute)));
 
     if (title.isEmpty || note.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,15 +60,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
 
     try {
-      await FirebaseFirestore.instance.collection('events').add({
-        'userId': userId,
-        'title': title,
-        'note': note,
-        'date': date,
-        'startTime': startTime,
-        'createdAt': Timestamp.now(),
-      });
-
+      await _eventDatabase.saveEvent(title, note, selectedDate, startTime); //Use database class method
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Event saved successfully')),
       );
@@ -111,31 +102,55 @@ class _AddEventScreenState extends State<AddEventScreen> {
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [Colors.green.shade400, Colors.green.shade700]),
+                gradient: LinearGradient(
+                    colors: [Colors.green.shade400, Colors.green.shade700]),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Add Event', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
+                  Text('Add Event',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black)),
                   Icon(Icons.shield, color: Colors.black),
                 ],
               ),
             ),
             SizedBox(height: 10),
-            Text('Date & Time', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text('Date & Time',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: Text(DateFormat('yyyy-MM-dd').format(selectedDate)),
+            SizedBox(
+              width: 200.0,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 198, 198, 198),
+                  foregroundColor: const Color.fromARGB(255, 0, 101, 49),
+                  padding: EdgeInsets.all(16),
+                ),
+                onPressed: () => _selectDate(context),
+                child: Text(DateFormat('yyyy-MM-dd').format(selectedDate)),
+              ),
             ),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => _selectStartTime(context),
-              child: Text('Event Time: ${selectedStartTime.format(context)}'),
+            SizedBox(
+              width: 200.0,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(67, 255, 255, 255),
+                  foregroundColor: const Color.fromARGB(255, 10, 110, 80),
+                  padding: EdgeInsets.all(16),
+                ),
+                onPressed: () => _selectStartTime(context),
+                child: Text('Event Time: ${selectedStartTime.format(context)}'),
+              ),
             ),
             SizedBox(height: 10),
-            Align(alignment: Alignment.centerLeft, child: Text('Title', style: TextStyle(color: Colors.blue))),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Title', style: TextStyle(color: Colors.blue))),
             TextField(
               controller: titleController,
               decoration: InputDecoration(
@@ -145,7 +160,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
             ),
             SizedBox(height: 10),
-            Align(alignment: Alignment.centerLeft, child: Text('Note', style: TextStyle(color: Colors.blue))),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Note', style: TextStyle(color: Colors.blue))),
             TextField(
               controller: noteController,
               decoration: InputDecoration(
@@ -155,18 +172,23 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
             ),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _saveEvent,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('Save', style: TextStyle(color: Colors.white)),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _saveEvent,
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 10, 96, 70)),
+                    child: Text('Save', style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      bottomNavigationBar: MyBottomNavigationBarWidget(
-        initialIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+      bottomNavigationBar: ColoredBottomBar(),
     );
   }
 }

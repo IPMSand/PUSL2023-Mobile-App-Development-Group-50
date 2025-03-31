@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import '../widgets/colored_bottom_nav.dart';
+
 
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
@@ -153,35 +155,12 @@ class _TimerPageState extends State<TimerPage> {
               ),
             ),
 
-            // Bottom navigation bar
-            Container(
-              height: 60,
-              color: const Color(0xFFD8FFD8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.home),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.shield),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.history),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
+      bottomNavigationBar: ColoredBottomBar(
+      
+     ),
     );
   }
 
@@ -192,7 +171,7 @@ class _TimerPageState extends State<TimerPage> {
         width: 120,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF5DD6D6) : const Color(0xFFAEEEEE),
+          color: isActive ? const Color.fromARGB(255, 24, 112, 147) : const Color.fromARGB(255, 24, 112, 147),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -211,7 +190,7 @@ class _TimerPageState extends State<TimerPage> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF5DD6D6),
+        backgroundColor: const Color.fromARGB(255, 24, 181, 181),
         fixedSize: const Size(100, 50),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

@@ -1,9 +1,10 @@
-// backend ok
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
+//
 import '../screens/home.dart';
-import 'register.dart';
+import '../widgets/person_painter.dart';
+import '../screens/register.dart';
+import '../database/auth_service_login.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _rememberMe = false;
+  final AuthService _authService = AuthService(); // Instance of AuthService
 
   @override
   void dispose() {
@@ -25,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginUser(BuildContext context) async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
 
@@ -40,45 +41,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     try {
-      await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
+      await _authService.signInWithEmailAndPassword(email, password); // Use AuthService method
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Login failed.';
-      switch (e.code) {
-        case 'user-not-found':
-          errorMessage = 'No user found for that email.';
-          break;
-        case 'wrong-password':
-          errorMessage = 'Wrong password provided for that user.';
-          break;
-        case 'invalid-email':
-          errorMessage = 'The email address is not valid.';
-          break;
-        case 'user-disabled':
-          errorMessage = 'This user has been disabled.';
-          break;
-        default:
-          errorMessage = 'An unexpected error occurred: ${e.message}';
-      }
-      _showSnackBar(context, errorMessage);
     } catch (e) {
-      _showSnackBar(context, 'An unexpected error occurred: $e');
+      _showSnackBar(context, _authService.handleAuthErrors(e)); // Use AuthService error handling
     }
   }
 
-  void _showSnackBar(BuildContext context, String message,
-      {Duration? duration}) {
+  void _showSnackBar(BuildContext context, String message, {Duration? duration}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(message),
-          duration: duration ?? const Duration(seconds: 3)),
+      SnackBar(content: Text(message), duration: duration ?? const Duration(seconds: 3)),
     );
   }
 
@@ -97,21 +72,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Text(
                     'Login',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   const Text(
                     "Hello, Let's get started",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                   const SizedBox(height: 40),
-                  // Login illustration
                   SizedBox(
                     height: 180,
                     child: Stack(
@@ -128,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        // Blue login form
                         Positioned(
                           right: MediaQuery.of(context).size.width * 0.25,
                           top: 20,
@@ -142,16 +109,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
-                                  Icons.person_outline,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
+                                const Icon(Icons.person_outline, color: Colors.white, size: 30),
                                 const SizedBox(height: 10),
                                 Container(
                                   height: 10,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 15),
+                                  margin: const EdgeInsets.symmetric(horizontal: 15),
                                   decoration: BoxDecoration(
                                     color: Colors.white70,
                                     borderRadius: BorderRadius.circular(5),
@@ -160,8 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const SizedBox(height: 8),
                                 Container(
                                   height: 10,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 15),
+                                  margin: const EdgeInsets.symmetric(horizontal: 15),
                                   decoration: BoxDecoration(
                                     color: Colors.white70,
                                     borderRadius: BorderRadius.circular(5),
@@ -171,20 +132,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        // Person illustrations
                         Positioned(
                           left: MediaQuery.of(context).size.width * 0.1,
                           bottom: 20,
                           child: Container(
                             width: 50,
                             height: 80,
-                            decoration: const BoxDecoration(
-                              color: Colors.transparent,
-                            ),
-                            child: CustomPaint(
-                              painter: PersonPainter(
-                                  color: Colors.blue[700]!), // Pass the color
-                            ),
+                            decoration: const BoxDecoration(color: Colors.transparent),
+                            child: CustomPaint(painter: PersonPainter(color: Colors.blue[700]!)),
                           ),
                         ),
                         Positioned(
@@ -193,13 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Container(
                             width: 50,
                             height: 80,
-                            decoration: const BoxDecoration(
-                              color: Colors.transparent,
-                            ),
-                            child: CustomPaint(
-                              painter: PersonPainter(
-                                  color: Colors.red[400]!), // Pass the color.
-                            ),
+                            decoration: const BoxDecoration(color: Colors.transparent),
+                            child: CustomPaint(painter: PersonPainter(color: Colors.red[400]!)),
                           ),
                         ),
                       ],
@@ -209,44 +159,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Email Address',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      const Text('Email Address', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          hintText: '',
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 16,
-                          ),
-                        ),
+                        decoration: const InputDecoration(hintText: '', contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16)),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        'Password',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      const Text('Password', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
-                        decoration: const InputDecoration(
-                          hintText: '',
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 16,
-                          ),
-                        ),
+                        decoration: const InputDecoration(hintText: '', contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16)),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -256,15 +182,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             shape: const CircleBorder(),
                             onChanged: (value) {
                               setState(() {
-                                _rememberMe = value ??
-                                    false; //handle null value, though it will not happen.
+                                _rememberMe = value ?? false;
                               });
                             },
                           ),
-                          const Text(
-                            'Remember me',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          const Text('Remember me', style: TextStyle(fontSize: 16)),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -272,53 +194,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {
-                            _loginUser(context);
-                          },
+                          onPressed: () => _loginUser(context),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2D4059),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: const Text('Login', style: TextStyle(fontSize: 16, color: Colors.white)),
                         ),
                       ),
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Doesn't have an account yet?",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
+                          const Text("Doesn't have an account yet?", style: TextStyle(fontSize: 14)),
                           TextButton(
-                            onPressed: () {
-                              // Sign up navigation would go here
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const RegisterScreen(), // Use the correct class name
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                            ),
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen())),
+                            child: const Text('Sign Up', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red)),
                           ),
                         ],
                       ),
@@ -331,58 +222,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-}
-
-// Custom painter class for drawing the person icon
-class PersonPainter extends CustomPainter {
-  final Color color;
-
-  PersonPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    // Head
-    canvas.drawCircle(
-        Offset(size.width / 2, size.height / 4), size.width / 3, paint);
-
-    // Body
-    canvas.drawRect(
-      Rect.fromCenter(
-        center: Offset(size.width / 2, size.height / 2 + 10),
-        width: size.width / 2,
-        height: size.height / 2,
-      ),
-      paint,
-    );
-
-    // Legs
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width / 4,
-        size.height,
-        size.width / 6,
-        size.height / 3,
-      ),
-      paint,
-    );
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width / 2 + size.width / 6,
-        size.height,
-        size.width / 6,
-        size.height / 3,
-      ),
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }

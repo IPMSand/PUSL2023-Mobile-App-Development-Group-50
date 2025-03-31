@@ -1,14 +1,14 @@
 // create new task screen
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart'; 
-import '../widgets/bottom_navbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../widgets/colored_bottom_nav.dart';
 
 class CreateTaskScreen extends StatefulWidget {
-  
-  
-  const CreateTaskScreen({super.key,});
+  const CreateTaskScreen({super.key});
 
   @override
   _CreateTaskScreenState createState() => _CreateTaskScreenState();
@@ -68,11 +68,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     }
   }
 
-  void _createTask() async {
+ void _createTask() async {
     if (_taskNameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Task name cannot be empty.')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Task name cannot be empty.')),
+        );
+      }
       return;
     }
 
@@ -80,9 +82,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       String id = DateTime.now().millisecondsSinceEpoch.toString();
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User not logged in.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('User not logged in. Please log in.')),
+          );
+        }
         return;
       }
       String userId = user.uid;
@@ -101,13 +105,24 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         'completed': 'false',
       });
 
-      print('Task added to Firestore successfully!');
-      Navigator.pop(context);
+      debugPrint('Task added to Firestore successfully!');
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } on FirebaseException catch (e) {
+      debugPrint('Firebase error adding task: ${e.message}');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add task: ${e.message}.')),
+        );
+      }
     } catch (e) {
-      print('Error adding task: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add task. Please try again.')),
-      );
+      debugPrint('Error adding task: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred. Please try again.')),
+        );
+      }
     }
   }
 
@@ -116,21 +131,21 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add New Category'),
+          title: const Text('Add New Category'),
           content: TextField(
             controller: _newCategoryController,
-            decoration: InputDecoration(labelText: 'Category Name'),
+            decoration: const InputDecoration(labelText: 'Category Name'),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
                 _newCategoryController.clear();
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Add'),
               onPressed: () {
                 if (_newCategoryController.text.isNotEmpty) {
                   setState(() {
@@ -147,19 +162,19 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       },
     );
   }
-
+  /*
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-  }
+  }--- is this bootom nav*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create New Task'),
+        title: const Text('Create New Task'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -174,16 +189,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             _selectEndTime(),
             _addDescription(),
             _createtaskBtn(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
-      bottomNavigationBar: MyBottomNavigationBarWidget(
-        initialIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+      bottomNavigationBar: ColoredBottomBar(),
     );
   }
+
 
   _createTaskName() {
     return TextField(
@@ -328,7 +341,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       style: ElevatedButton.styleFrom(
           foregroundColor: const Color.fromARGB(255, 255, 255, 255),
           backgroundColor: Colors.green,
-          overlayColor: const Color.fromARGB(255, 36, 7, 255),
+          overlayColor: const Color.fromARGB(255, 0, 50, 30),
           padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
           textStyle: TextStyle(
             fontSize: 20,

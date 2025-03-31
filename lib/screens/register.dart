@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart'; 
-import 'package:email_validator/email_validator.dart'; 
+import 'package:email_validator/email_validator.dart';
+import '../database/auth_service_register.dart'; 
+import '../widgets/person_painter.dart'; 
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,9 +14,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final FirebaseAuth _auth = FirebaseAuth.instance; // Firebase Auth instance
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthService _authService = AuthService(); // Instance of AuthService
 
   @override
   void dispose() {
@@ -27,61 +24,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  bool _validateInput() {
+  Future<void> _registerUser() async {
     String name = _nameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter your name.')));
-      return false;
+      _showSnackBar('Please enter your name.');
+      return;
     }
 
     if (email.isEmpty || !EmailValidator.validate(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter a valid email address.')));
-      return false;
+      _showSnackBar('Please enter a valid email address.');
+      return;
     }
 
     if (password.isEmpty || password.length < 8 || password.length > 20) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Password must be between 8 and 20 characters.')));
-      return false;
+      _showSnackBar('Password must be between 8 and 20 characters.');
+      return;
     }
-    return true;
-  }
-
-  Future<void> _registerUser() async {
-    if (!_validateInput()) return; // Validation check
 
     try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      // Store additional user data in Firestore
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'name': _nameController.text,
-        'email': _emailController.text,
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration successful!')),
-      );
-
+      await _authService.registerUser(name, email, password); // Use AuthService method
+      _showSnackBar('Registration successful!');
       Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error registering user: ${e.message}')),
-      );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An unexpected error occurred: $e')),
-      );
+      _showSnackBar(_authService.handleAuthErrors(e)); // Use AuthService error handling
     }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -99,36 +72,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   const Text(
                     'Register',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   const Text(
                     "Please fill your details below",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
                     height: 100,
-                    child: buildRegisterIllustration(),
+                    child: _buildRegisterIllustration(),
                   ),
                   const SizedBox(height: 10),
-                  buildFormField(
+                  _buildFormField(
                     label: 'Your Name',
                     controller: _nameController,
                     keyboardType: TextInputType.name,
                   ),
-                  buildFormField(
+                  _buildFormField(
                     label: 'Email Address',
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  buildFormField(
+                  _buildFormField(
                     label: 'Password',
                     controller: _passwordController,
                     isPassword: true,
@@ -138,46 +105,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        _registerUser(); // Call the register function
-                      },
+                      onPressed: _registerUser, // Call the register function
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2D4059),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: const Text('Register', style: TextStyle(fontSize: 16, color: Colors.white)),
                     ),
                   ),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Already have an Account?",
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
+                      const Text("Already have an Account?", style: TextStyle(fontSize: 14)),
                       TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                          ),
-                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Login', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red)),
                       ),
                     ],
                   ),
@@ -190,53 +133,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget buildFormField({
-  required String label,
-  required TextEditingController controller,
-  bool isPassword = false,
-  TextInputType keyboardType = TextInputType.text,
-  Widget? suffix,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+  Widget _buildFormField({
+    required String label,
+    required TextEditingController controller,
+    bool isPassword = false,
+    TextInputType keyboardType = TextInputType.text,
+    Widget? suffix,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          obscureText: isPassword,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(hintText: '', contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5), suffixIcon: suffix),
         ),
-      ),
-      const SizedBox(height: 8),
-      TextField(
-        controller: controller,
-        obscureText: isPassword,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          hintText: '',
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 5,
-          ),
-          suffixIcon: suffix,
-        ),
-      ),
-      const SizedBox(height: 5),
-    ],
-  );
-}
+        const SizedBox(height: 5),
+      ],
+    );
+  }
 
-  Widget buildRegisterIllustration() {
+  Widget _buildRegisterIllustration() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           width: 100,
           height: 120,
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(8),
-          ),
+          decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(8)),
           child: Stack(
             children: [
               Align(
@@ -244,32 +171,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 6,
-                      width: 70,
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                    Container(
-                      height: 6,
-                      width: 60,
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                    Container(
-                      height: 6,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
+                    Container(height: 6, width: 70, margin: const EdgeInsets.only(bottom: 8), decoration: BoxDecoration(color: Colors.white.withOpacity(0.8), borderRadius: BorderRadius.circular(3))),
+                    Container(height: 6, width: 60, margin: const EdgeInsets.only(bottom: 8), decoration: BoxDecoration(color: Colors.white.withOpacity(0.8), borderRadius: BorderRadius.circular(3))),
+                    Container(height: 6, width: 70, decoration: BoxDecoration(color: Colors.white.withOpacity(0.8), borderRadius: BorderRadius.circular(3))),
                   ],
                 ),
               ),
@@ -280,79 +184,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Container(
                   width: 30,
                   height: 30,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.blue,
-                    size: 20,
-                  ),
+                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                  child: const Icon(Icons.check, color: Colors.blue, size: 20),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(width: 5),
-        CustomPaint(
-          size: const Size(40, 120),
-          painter: PersonPainter(color: Colors.blue[900]!),
-        ),
+        CustomPaint(size: const Size(40, 120), painter: PersonPainter(color: Colors.blue[900]!)),
       ],
     );
-  }
-}
-// Custom painter class for drawing the person icon
-class PersonPainter extends CustomPainter {
-  final Color color;
-
-  PersonPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    // Head
-    canvas.drawCircle(
-        Offset(size.width / 2, size.height / 4), size.width / 3, paint);
-
-    // Body
-    canvas.drawRect(
-      Rect.fromCenter(
-        center: Offset(size.width / 2, size.height / 2 + 10),
-        width: size.width / 2,
-        height: size.height / 2,
-      ),
-      paint,
-    );
-
-    // Legs
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width / 4,
-        size.height,
-        size.width / 6,
-        size.height / 3,
-      ),
-      paint,
-    );
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width / 2 + size.width / 6,
-        size.height,
-        size.width / 6,
-        size.height / 3,
-      ),
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }
 
