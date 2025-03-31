@@ -1,25 +1,21 @@
-# Project Title: STUDYZEN Flutter Mobile Application
+# Project Title: STUDYZEN Flutter Mobile Application 📱👨‍🎓
 - Course: PUSL2023 Mobile App Development 
 - Year: 2nd Year, 2nd Semester
 ## Project Overview
-- <p>This project aims to develop a ....here.</p>
+- <p>This project aims to develop a Student Study Management Mobile application thst facilitate students to manage thier taks easier from one platform.</p>
 ## Implementation
-<p>here</p>
+- Frontend: Fluuter
+- Backend: Firebase
+- Android version:
+- Device: Google Pixel 4 API 35
 <h3>Key Features</h3>
+- To-Do List 
+- Event Planner
+- Calendar
+- Study Focus Timmer
 <h3>Future Enhancements</h3>
 <h4>Additional Notes</h4>
 <h4>Group Members</h4>
 ..............
 
-
-A new Flutter project.      
-## Getting Started
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 # PUSL2023-Mobile-App-Development-Group-50
