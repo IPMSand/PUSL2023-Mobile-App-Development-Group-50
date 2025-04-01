@@ -1,57 +1,76 @@
+// profile_screen.dart
 import 'package:flutter/material.dart';
-// Profile Screen --- this is included in homepage too...
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../screens/profile_edit.dart'; // Import the new EditProfileScreen file
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-        backgroundColor: Colors.greenAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.greenAccent,
-              child: Icon(Icons.person, color: Colors.white, size: 80),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              "Seraphina",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "seraphina@example.com",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
-            ListTile(
-              leading: Icon(Icons.edit, color: Colors.green),
-              title: Text("Edit Profile"),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.phone, color: Colors.green),
-              title: Text("Phone Number"),
-              onTap: () {},
-            ),
+    User? user = FirebaseAuth.instance.currentUser;
 
-            ListTile(
-              leading: Icon(Icons.logout, color: Colors.red),
-              title: Text("Log Out", style: TextStyle(color: Colors.red)),
-              onTap: () {},
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('users').doc(user?.uid).get(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        var userData = snapshot.data?.data() as Map<String, dynamic>?;
+        String name = userData?['name'] ?? user?.displayName ?? "User";
+        String email = user?.email ?? "No Email";
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Profile"),
+            backgroundColor: Colors.greenAccent,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                CircleAvatar(
+                  radius: 60,
+                  backgroundColor: const Color.fromRGBO(105, 240, 174, 1),
+                  child: Icon(Icons.person, color: Colors.white, size: 80),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  name,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  email,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+                ListTile(
+                  leading: Icon(Icons.edit, color: const Color.fromARGB(255, 2, 94, 59)),
+                  title: Text("Edit Profile"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditProfileScreen(user: user)),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout, color: Colors.red),
+                  title: Text("Log Out", style: TextStyle(color: Colors.red)),
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pop(context); // adjust here
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

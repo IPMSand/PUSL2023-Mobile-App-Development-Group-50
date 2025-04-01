@@ -15,7 +15,7 @@ class Start04Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/start4.png',
+              "assets/images/start4.png",
               height: 250,
             ),
             const SizedBox(height: 25),
@@ -66,19 +66,7 @@ class Start04Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             
-            TextButton(
-              onPressed: () {
-                // Add action for Skip 
-              },
-              child: Text(
-                "Skip",
-                style: GoogleFonts.poppins(
-                  color: Colors.red,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+           
 
             // Next Button with slide transition
             ElevatedButton(

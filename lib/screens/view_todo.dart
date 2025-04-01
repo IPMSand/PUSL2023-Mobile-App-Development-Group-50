@@ -30,28 +30,36 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Future<void> _fetchCurrentUser() async {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
-        setState(() {
-          currentUserId = user.uid;
-        });
-        print('Current User ID (initState): $currentUserId');
-        _fetchTasks();
+        if (mounted) {
+          setState(() {
+            currentUserId = user.uid;
+          });
+          debugPrint('Current User ID (initState): $currentUserId');
+          _fetchTasks();
+        }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User is not logged in. Please log in.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('User is not logged in. Please log in.')),
+          );
+        }
       }
     }, onError: (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching user. Please check your connection.')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error fetching user. Please check your connection.')),
+        );
+      }
     });
   }
 
   void _updateUI(List<Task> fetchedTasks, int taskCount) {
-    setState(() {
-      tasks = fetchedTasks;
-      originalTaskCount = taskCount;
-    });
+    if (mounted) {
+      setState(() {
+        tasks = fetchedTasks;
+        originalTaskCount = taskCount;
+      });
+    }
   }
 
   Future<void> _fetchTasks() async {
@@ -59,9 +67,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
       try {
         await _database.fetchTasks(currentUserId, _updateUI);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load tasks. Please try again.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to load tasks. Please try again.')),
+          );
+        }
       }
     }
   }
@@ -82,15 +92,19 @@ class _TaskListScreenState extends State<TaskListScreen> {
       if (success) {
         _fetchTasks();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update task status. Please try again.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to update task status. Please try again.')),
+          );
+        }
       }
     } catch (e) {
-      print('Error toggling task completion in UI: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An unexpected error occurred. Please try again.')),
-      );
+      debugPrint('Error toggling task completion in UI: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred. Please try again.')),
+        );
+      }
     }
   }
 
@@ -100,15 +114,19 @@ class _TaskListScreenState extends State<TaskListScreen> {
       if (removeSuccess) {
         _fetchTasks();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to remove task. Please try again.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to remove task. Please try again.')),
+          );
+        }
       }
     } catch (e) {
-      print('Error removing task from Firestore in UI: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An unexpected error occurred. Please try again.')),
-      );
+      debugPrint('Error removing task from Firestore in UI: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred. Please try again.')),
+        );
+      }
     }
   }
 
@@ -117,31 +135,30 @@ class _TaskListScreenState extends State<TaskListScreen> {
       if (currentUserId.isNotEmpty) {
         bool deleteSuccess = await _database.checkAndDeleteCompletedTasks(currentUserId);
         if (!deleteSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to manage completed tasks. Please try again.')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to manage completed tasks. Please try again.')),
+            );
+          }
         }
       }
     } catch (e) {
-      print('Error checking and deleting completed tasks in UI: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An unexpected error occurred. Please try again.')),
-      );
+      debugPrint('Error checking and deleting completed tasks in UI: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred. Please try again.')),
+        );
+      }
     }
   }
 
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My To-Do Tasks'),
+        title: const Text('My To-Do Tasks'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Padding(
@@ -164,12 +181,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: ColoredBottomBar(),
+      bottomNavigationBar: const ColoredBottomBar(),
     );
   }
 
   _topTitle() {
-    return Align(
+    return const Align(
       alignment: Alignment.centerLeft,
       child: Text('My Day ',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
@@ -187,7 +204,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   _todoProgress() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 73, 175, 137),
         borderRadius: BorderRadius.circular(28),
@@ -201,25 +218,25 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Today\'s progress Summary',
+                    const Text('Today\'s progress Summary',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
                     Text('$originalTaskCount tasks',
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 55, 55, 55))),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 55, 55, 55))),
                   ],
                 ),
               ),
               Text('progress ${(progress * 100).toStringAsFixed(2)}%'),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SizedBox(
             width: 300,
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           ),
         ],
@@ -228,8 +245,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 
   _todoListTitle() {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
+    return const Padding(
+      padding: EdgeInsets.all(12.0),
       child: Text('Today\'s Tasks',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
     );
@@ -244,10 +261,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
           MaterialPageRoute(builder: (context) => AllTasksScreen()),
         );
       },
-      child: Text('See All'),
+      child: const Text('See All'),
     );
   }
-
 
   _todoTaskList() {
     return Expanded(
@@ -256,60 +272,63 @@ class _TaskListScreenState extends State<TaskListScreen> {
         itemBuilder: (context, index) {
           return Card(
             surfaceTintColor: const Color.fromARGB(255, 112, 191, 137),
-                   child: ListTile(
-            leading: Checkbox(
-            value: tasks[index].completed == 'true',
-            onChanged: (bool? value) => _toggleTaskCompletion(index),
-            ),
-          title: Text(
-            tasks[index].taskName,
-            style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: tasks[index].completed == 'true' ? Colors.grey : const Color.fromARGB(255, 124, 11, 122), 
-            decoration: tasks[index].completed == 'true' ? TextDecoration.lineThrough : null,
-            ),
-          ),
-           subtitle: Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-              Row( 
-                children: [
-                   Text('Start: ${tasks[index].startTime ?? ''}'),
-                   SizedBox(width: 10), 
-                   Text('End: ${tasks[index].endTime ?? ''}'),
-                 ],
+            child: ListTile(
+              leading: Checkbox(
+                value: tasks[index].completed == 'true',
+                onChanged: (bool? value) => _toggleTaskCompletion(index),
               ),
-         ],
-        ),
-       onTap: () {
-         showDialog(
-           context: context,
-           builder: (BuildContext context) {
-              return AlertDialog(
-              title: Text(tasks[index].taskName),
-              content: SingleChildScrollView(
-               child: ListBody(
-                   children: <Widget>[
-                  Text('Date: ${tasks[index].date ?? ''}'),
-                  Text('Category: ${tasks[index].category ?? ''}'),
-                  Text('Description: ${tasks[index].description ?? ''}'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
+              title: Text(
+                tasks[index].taskName,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: tasks[index].completed == 'true'
+                      ? Colors.grey
+                      : const Color.fromARGB(255, 124, 11, 122),
+                  decoration: tasks[index].completed == 'true'
+                      ? TextDecoration.lineThrough
+                      : null,
+                ),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text('Start: ${tasks[index].startTime ?? ''}'),
+                      const SizedBox(width: 10),
+                      Text('End: ${tasks[index].endTime ?? ''}'),
+                    ],
+                  ),
+                ],
+              ),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(tasks[index].taskName),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text('Date: ${tasks[index].date ?? ''}'),
+                            Text('Category: ${tasks[index].category ?? ''}'),
+                            Text('Description: ${tasks[index].description ?? ''}'),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Close'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
-          ],
-        );
-      },
-    );
-  },
-),
-           
           );
         },
       ),
@@ -324,7 +343,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
           MaterialPageRoute(builder: (context) => CreateTaskScreen()),
         ).then((value) => _fetchTasks());
       },
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
     );
   }
 }

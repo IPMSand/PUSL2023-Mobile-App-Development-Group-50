@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-//
 import '../screens/home.dart';
 import '../widgets/person_painter.dart';
 import '../screens/register.dart';
-import '../database/auth_service_login.dart'; 
+import '../database/auth_service_login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _rememberMe = false;
-  final AuthService _authService = AuthService(); // Instance of AuthService
+  final AuthService _authService = AuthService();
 
   @override
   void dispose() {
@@ -31,30 +30,40 @@ class _LoginScreenState extends State<LoginScreen> {
     final String password = _passwordController.text.trim();
 
     if (email.isEmpty || !EmailValidator.validate(email)) {
-      _showSnackBar(context, 'Please enter a valid email address.');
+      if (mounted && context.mounted) {
+        _showSnackBar(context, 'Please enter a valid email address.');
+      }
       return;
     }
 
     if (password.isEmpty) {
-      _showSnackBar(context, 'Please enter a password.');
+      if (mounted && context.mounted) {
+        _showSnackBar(context, 'Please enter a password.');
+      }
       return;
     }
 
     try {
-      await _authService.signInWithEmailAndPassword(email, password); // Use AuthService method
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      await _authService.signInWithEmailAndPassword(email, password);
+      if (mounted && context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
     } catch (e) {
-      _showSnackBar(context, _authService.handleAuthErrors(e)); // Use AuthService error handling
+      if (mounted && context.mounted) {
+        _showSnackBar(context, _authService.handleAuthErrors(e));
+      }
     }
   }
 
   void _showSnackBar(BuildContext context, String message, {Duration? duration}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: duration ?? const Duration(seconds: 3)),
-    );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), duration: duration ?? const Duration(seconds: 3)),
+      );
+    }
   }
 
   @override

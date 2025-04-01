@@ -51,7 +51,7 @@ class _StudyZenScreenState extends State<StudyZenScreen> {
               child: Column(
                 children: [
                   Image.asset(
-                    'assets/logos/studyzen_logo.png', 
+                    'assets/logo/studyzen_logo.png', 
                     height: 220,
                   ),
                   const SizedBox(height: 5),

@@ -1,4 +1,4 @@
-// view all the tasks screen
+//---> // view all the tasks screen
 import 'package:flutter/material.dart';
 import '../models/todo_taks_class.dart';
 import '../database/todo_database.dart';
@@ -25,24 +25,30 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
   Future<void> _fetchCurrentUser() async {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
-        setState(() {
-          currentUserId = user.uid;
-        });
-         debugPrint('Current User ID (initState): $currentUserId');
-        _fetchTasks();
+        if (mounted) {
+          setState(() {
+            currentUserId = user.uid;
+          });
+          debugPrint('Current User ID (initState): $currentUserId');
+          _fetchTasks();
+        }
       } else {
         debugPrint('User is currently signed out!');
       }
     }, onError: (error) {
-       debugPrint('Error listening to auth state: $error');
-      _showSnackBar('Error listening to authentication status.');
+      debugPrint('Error listening to auth state: $error');
+      if (mounted) {
+        _showSnackBar('Error listening to authentication status.');
+      }
     });
   }
 
   void _updateUI(List<Task> fetchedTasks) {
-    setState(() {
-      tasks = fetchedTasks;
-    });
+    if (mounted) {
+      setState(() {
+        tasks = fetchedTasks;
+      });
+    }
   }
 
   Future<void> _fetchTasks() async {
@@ -50,8 +56,10 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
       try {
         await _database.fetchAllTasks(currentUserId, _updateUI);
       } catch (e) {
-         debugPrint('Error fetching tasks: $e');
-        _showSnackBar('Failed to fetch tasks.');
+        debugPrint('Error fetching tasks: $e');
+        if (mounted) {
+          _showSnackBar('Failed to fetch tasks.');
+        }
       }
     }
   }
@@ -66,11 +74,15 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
       if (success) {
         _fetchTasks();
       } else {
-        _showSnackBar('Failed to toggle task completion.');
+        if (mounted) {
+          _showSnackBar('Failed to toggle task completion.');
+        }
       }
     } catch (e) {
-       debugPrint('Error toggling task completion in UI: $e');
-      _showSnackBar('Error toggling task completion.');
+      debugPrint('Error toggling task completion in UI: $e');
+      if (mounted) {
+        _showSnackBar('Error toggling task completion.');
+      }
     }
   }
 
@@ -80,18 +92,24 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
       if (removeSuccess) {
         _fetchTasks();
       } else {
-        _showSnackBar('Failed to remove task.');
+        if (mounted) {
+          _showSnackBar('Failed to remove task.');
+        }
       }
     } catch (e) {
-       debugPrint('Error removing task from Firestore in UI: $e');
-      _showSnackBar('Error removing task.');
+      debugPrint('Error removing task from Firestore in UI: $e');
+      if (mounted) {
+        _showSnackBar('Error removing task.');
+      }
     }
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
   }
 
   @override
@@ -107,7 +125,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My All Tasks'),
+        title: const Text('My All Tasks'),
         backgroundColor: Colors.greenAccent,
       ),
       body: ListView.builder(
@@ -123,12 +141,12 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   category,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: categoryTasks.length,
                 itemBuilder: (context, taskIndex) {
                   Task task = categoryTasks[taskIndex];
@@ -136,7 +154,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                     surfaceTintColor: const Color.fromARGB(255, 112, 191, 137),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255)),
+                      side: const BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
                     ),
                     child: ListTile(
                       leading: Checkbox(
@@ -147,7 +165,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                       title: Text(
                         task.taskName,
                         style: task.completed == 'true'
-                            ? TextStyle(decoration: TextDecoration.lineThrough)
+                            ? const TextStyle(decoration: TextDecoration.lineThrough)
                             : null,
                       ),
                       subtitle: Text('Date: ${task.date ?? ''}'),
@@ -170,7 +188,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('Close'),
+                                  child: const Text('Close'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -184,7 +202,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                         onTap: () {
                           _removeTaskFromFirestore(task.documentId!);
                         },
-                        child: Icon(Icons.delete),
+                        child: const Icon(Icons.delete),
                       ),
                     ),
                   );

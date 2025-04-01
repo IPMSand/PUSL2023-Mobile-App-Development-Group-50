@@ -15,7 +15,7 @@ class Start03Screen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/start03.png',
+              'assets/images/start3.png',
               height: 250,
             ),
             const SizedBox(height: 15),
@@ -65,19 +65,7 @@ class Start03Screen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(
-              onPressed: () {
-                // Skip action 
-              },
-              child: Text(
-                "Skip",
-                style: GoogleFonts.poppins(
-                  color: Colors.red,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+          
 
             ElevatedButton(
               onPressed: () {

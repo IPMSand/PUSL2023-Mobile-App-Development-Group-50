@@ -125,11 +125,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
             SizedBox(
               width: 200.0,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 198, 198, 198),
-                  foregroundColor: const Color.fromARGB(255, 0, 101, 49),
-                  padding: EdgeInsets.all(16),
-                ),
                 onPressed: () => _selectDate(context),
                 child: Text(DateFormat('yyyy-MM-dd').format(selectedDate)),
               ),
@@ -138,11 +133,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
             SizedBox(
               width: 200.0,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(67, 255, 255, 255),
-                  foregroundColor: const Color.fromARGB(255, 10, 110, 80),
-                  padding: EdgeInsets.all(16),
-                ),
                 onPressed: () => _selectStartTime(context),
                 child: Text('Event Time: ${selectedStartTime.format(context)}'),
               ),
