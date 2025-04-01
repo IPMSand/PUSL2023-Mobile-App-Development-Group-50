@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import '../screens/calander.dart';
 import '../screens/event_plan.dart';
 import '../screens/profile.dart';
-import '../screens/timer.dart';
 import '../screens/view_todo.dart';
 
 class DashboardWidget extends StatefulWidget {
