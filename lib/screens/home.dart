@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/timer.dart';
 import '../widgets/colored_bottom_nav.dart';
 import '../screens/profile.dart';
+import '../widgets/dashwidget.dart';
 import 'view_todo.dart';
 import '../screens/event_plan.dart';
 import '../screens/calander.dart';
@@ -88,11 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.home, color: Colors.green),
-              title: Text("Home"),
-              onTap: () => _navigateToScreen(DashboardScreen()),
-            ),
+           
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
               title: Text("To Do List"),
@@ -152,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 16),
         ],
       ),
-      body: Center(child: Text("Main Content Here")),
+      body: DashboardWidget(),
       bottomNavigationBar: ColoredBottomBar(),
     );
   }

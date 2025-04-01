@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/bottom_navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import '../widgets/colored_bottom_nav.dart';
-import 'profile.dart';
-import 'view_todo.dart';
-import 'calander.dart';
-import 'event_plan.dart';
-import 'timer.dart';
-//import 'event_detail_screen.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+import '../screens/calander.dart';
+import '../screens/event_plan.dart';
+import '../screens/profile.dart';
+import '../screens/timer.dart';
+import '../screens/view_todo.dart';
+
+class DashboardWidget extends StatefulWidget {
+  const DashboardWidget({super.key});
 
   @override
-  State<DashboardScreen> createState() => _MyDashboardScreen();
+  State<DashboardWidget> createState() => _DashboardWidgetState();
 }
 
-class _MyDashboardScreen extends State<DashboardScreen> {
+class _DashboardWidgetState extends State<DashboardWidget> {
   String _username = 'User';
   List<Map<String, dynamic>> _upcomingEvents = [];
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -69,86 +66,75 @@ class _MyDashboardScreen extends State<DashboardScreen> {
     });
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.greenAccent,
-        title: const Text("StudyZen"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Hi, $_username", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              const Text("Here is your activity today."),
-              const SizedBox(height: 16),
-
-              // Feature Icons
-              Center(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildFeatureIcon("My Profile", "assets/images/home-profile.png", ProfileScreen()),
-                        SizedBox(width: 12),
-                        _buildFeatureIcon("To Do List", "assets/images/home-list.png", TaskListScreen()),
-                        SizedBox(width: 12),
-                        _buildFeatureIcon("Calendar", "assets/images/home-calendar.png", CalendarScreen()),
-                      ],
-                    ),
-                    SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildFeatureIcon("Plan Events", "assets/images/home-plan.png", AddEventScreen()),
-                        SizedBox(width: 12),
-                        _buildFeatureIcon("Timer", "assets/images/home-timer.png", TimerPage()),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Upcoming Events
-              const Text("Upcoming Events", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              _upcomingEvents.isNotEmpty
-                  ? Column(
-                children: _upcomingEvents
-                    .map((event) => _buildEventCard(event['title']!, event['time']!))
-                    .toList(),
-              )
-                  : const Text("No upcoming events", style: TextStyle(color: Colors.grey)),
-
-              const SizedBox(height: 16),
-              const Text("Tasks", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-
-              // Task Icons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Hi, $_username",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text("Here is your activity today."),
+            const SizedBox(height: 16),
+            Center(
+              child: Column(
                 children: [
-                  _buildTaskIcon("HTML", "assets/images/home-html.png"),
-                  _buildTaskIcon("CSS", "assets/images/home-css.png"),
-                  _buildTaskIcon("PHP", "assets/images/home-php.png"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildFeatureIcon("My Profile",
+                          "assets/images/home-profile.png", ProfileScreen()),
+                      SizedBox(width: 12),
+                      _buildFeatureIcon("To Do List",
+                          "assets/images/home-list.png", TaskListScreen()),
+                      SizedBox(width: 12),
+                      _buildFeatureIcon("Calendar",
+                          "assets/images/home-calendar.png", CalendarScreen()),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildFeatureIcon("Plan Events",
+                          "assets/images/home-plan.png", AddEventScreen()),
+                      SizedBox(width: 12),
+                      _buildFeatureIcon("Timer",
+                          "assets/images/home-timer.png", TimerPage()),
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            const Text("Upcoming Events",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            _upcomingEvents.isNotEmpty
+                ? Column(
+                    children: _upcomingEvents
+                        .map((event) =>
+                            _buildEventCard(event['title']!, event['time']!))
+                        .toList(),
+                  )
+                : const Text("No upcoming events",
+                    style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 16),
+            const Text("Tasks",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildTaskIcon("HTML", "assets/images/home-html.png"),
+                _buildTaskIcon("CSS", "assets/images/home-css.png"),
+                _buildTaskIcon("PHP", "assets/images/home-php.png"),
+              ],
+            ),
+          ],
         ),
       ),
-    bottomNavigationBar: const ColoredBottomBar(),
     );
   }
 
@@ -172,13 +158,13 @@ class _MyDashboardScreen extends State<DashboardScreen> {
     );
   }
 
-
   Widget _buildEventCard(String title, String time) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EventDetailScreen(title: title, time: time)),
+          MaterialPageRoute(
+              builder: (context) => EventDetailScreen(title: title, time: time)),
         );
       },
       child: Container(
@@ -222,7 +208,9 @@ class _MyDashboardScreen extends State<DashboardScreen> {
           children: [
             Image.asset(imagePath, width: 45, height: 45),
             SizedBox(height: 8),
-            FittedBox(child: Text(label, style: TextStyle(fontSize: 11), textAlign: TextAlign.center)),
+            FittedBox(
+                child: Text(label,
+                    style: TextStyle(fontSize: 11), textAlign: TextAlign.center)),
           ],
         ),
       ),
@@ -234,8 +222,8 @@ class EventDetailScreen extends StatelessWidget {
   final String title;
   final String time;
 
-  // Constructor to accept title and time
-  const EventDetailScreen({Key? key, required this.title, required this.time}) : super(key: key);
+  const EventDetailScreen({Key? key, required this.title, required this.time})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
