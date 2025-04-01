@@ -3,8 +3,6 @@
 # Project Title: STUDYZEN Flutter Mobile Application
 - Course: PUSL2023 Mobile App Development 
 - Year: 2nd Year, 2nd Semester
-## Project Overview
-- <p>This project aims to develop a ....here.</p>
 ## Implementation
 <p>here</p>
 <h3>Key Features</h3>
