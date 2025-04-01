@@ -5,23 +5,6 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Timer App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFD4F9CA),
-      ),
-      home: const TimerPage(),
-    );
-  }
-}
-
 class TimerPage extends StatefulWidget {
   const TimerPage({Key? key}) : super(key: key);
 
