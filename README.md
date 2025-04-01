@@ -1,3 +1,5 @@
+# Frontend-Developmnet-Branch
+- This bracnh consits with UI design implementation of StudyZen Mobile Application without backend intergrations.
 # Project Title: STUDYZEN Flutter Mobile Application
 - Course: PUSL2023 Mobile App Development 
 - Year: 2nd Year, 2nd Semester
@@ -10,16 +12,3 @@
 <h4>Additional Notes</h4>
 <h4>Group Members</h4>
 ..............
-
-
-A new Flutter project.      
-## Getting Started
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# PUSL2023-Mobile-App-Development-Group-50
