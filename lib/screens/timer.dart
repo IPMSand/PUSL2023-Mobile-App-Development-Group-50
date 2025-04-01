@@ -74,43 +74,13 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Timer Page'),
+        backgroundColor: Colors.greenAccent,
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            // Top navigation bar
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: const Color(0xFFD4F9CA),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {},
-                  ),
-                  const Text(
-                    'Welcome',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.settings),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
             // Main content
             Expanded(
               child: Padding(
@@ -205,35 +175,6 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-              ),
-            ),
-
-            // Bottom navigation bar
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: const BoxDecoration(
-                color: Color(0xFFD4F9CA),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.home),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.shield),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.history),
-                    onPressed: () {},
-                  ),
-                ],
               ),
             ),
           ],
