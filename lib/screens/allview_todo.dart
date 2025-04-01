@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../models/todo_taks_class.dart';
 import '../database/todo_database.dart';
+import '../widgets/colored_bottom_nav.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AllTasksScreen extends StatefulWidget {
@@ -212,6 +213,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
           );
         },
       ),
+      bottomNavigationBar: ColoredBottomBar(),
     );
   }
 }

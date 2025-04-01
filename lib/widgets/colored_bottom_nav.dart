@@ -7,7 +7,7 @@ class ColoredBottomBar extends StatelessWidget {
   const ColoredBottomBar({
     super.key,
     this.barColor =  const Color.fromRGBO(105, 240, 174, 1),
-    this.barHeight = 26.0,
+    this.barHeight = 36.0,
   });
 
   @override
