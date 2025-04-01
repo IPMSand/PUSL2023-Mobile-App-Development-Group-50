@@ -1,41 +1,65 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Timer App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: const Color(0xFFD4F9CA),
+      ),
+      home: const TimerPage(),
+    );
+  }
+}
 
 class TimerPage extends StatefulWidget {
-  const TimerPage({super.key});
+  const TimerPage({Key? key}) : super(key: key);
 
   @override
   State<TimerPage> createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage> {
+class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   Timer? _timer;
-  int _hours = 0;
-  int _minutes = 0;
   int _seconds = 0;
-  int _milliseconds = 0;
   bool _isRunning = false;
-  String _activityType = 'Ongoing'; // Default activity type
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _animationController.dispose();
+    super.dispose();
+  }
 
   void _startTimer() {
     if (!_isRunning) {
-      _isRunning = true;
-      _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+      setState(() {
+        _isRunning = true;
+      });
+      _animationController.forward();
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         setState(() {
-          _milliseconds += 10;
-          if (_milliseconds >= 1000) {
-            _milliseconds = 0;
-            _seconds++;
-            if (_seconds >= 60) {
-              _seconds = 0;
-              _minutes++;
-              if (_minutes >= 60) {
-                _minutes = 0;
-                _hours++;
-              }
-            }
-          }
+          _seconds++;
         });
       });
     }
@@ -43,110 +67,161 @@ class _TimerPageState extends State<TimerPage> {
 
   void _stopTimer() {
     if (_isRunning) {
-      _isRunning = false;
+      setState(() {
+        _isRunning = false;
+      });
+      _animationController.reverse();
       _timer?.cancel();
     }
   }
 
   void _resetTimer() {
-    _stopTimer();
     setState(() {
-      _hours = 0;
-      _minutes = 0;
       _seconds = 0;
-      _milliseconds = 0;
+      _isRunning = false;
     });
-  }
-
-  void _toggleActivityType(String type) {
-    setState(() {
-      _activityType = type;
-    });
-  }
-
-  @override
-  void dispose() {
+    _animationController.reset();
     _timer?.cancel();
-    super.dispose();
   }
 
   String _formatTime() {
-    return '${_hours.toString().padLeft(2, '0')}:${_minutes.toString().padLeft(2, '0')}:${_seconds.toString().padLeft(2, '0')}:${(_milliseconds ~/ 10).toString().padLeft(2, '0')}';
+    final hours = (_seconds ~/ 3600).toString().padLeft(2, '0');
+    final minutes = ((_seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_seconds % 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
-        title: Text('Timer'),
-        backgroundColor: Colors.greenAccent,
-      ),
       body: SafeArea(
         child: Column(
           children: [
+            // Top navigation bar
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: const Color(0xFFD4F9CA),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {},
+                  ),
+                  const Text(
+                    'Welcome',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.more_vert),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Main content
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Illustration
-                    Container(
-                      height: 180,
-                      width: 180,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Image.asset(
+                        'assets/kj.jpg',
+                        height: 200,
                       ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Image.network(
-                            'https://via.placeholder.com/150', // this doesnt work - use asset img.
-                            fit: BoxFit.contain,
-                          ),
-                          const Text(
-                            '09:00',
+                    ),
+
+                    // Timer labels
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          Text(
+                            'Hours',
                             style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Minutes',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Seconds',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
-
-                    // Activity type toggle
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildToggleButton('Ongoing', _activityType == 'Ongoing'),
-                        _buildToggleButton('Break', _activityType == 'Break'),
-                      ],
-                    ),
-
-                    const SizedBox(height: 40),
 
                     // Timer display
-                    Text(
-                      _formatTime(),
-                      style: const TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
+                    AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: 1.0 + (_animationController.value * 0.05),
+                          child: child,
+                        );
+                      },
+                      child: Text(
+                        _formatTime(),
+                        style: const TextStyle(
+                          fontSize: 64,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
 
-                    const SizedBox(height: 40),
-
-                    // Control buttons
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildControlButton('Start', Colors.teal, _startTimer),
-                        _buildControlButton('Stop', Colors.teal, _stopTimer),
-                        _buildControlButton('Reset', Colors.teal, _resetTimer),
-                      ],
+                    // Timer control buttons
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _TimerButton(
+                            text: 'Start',
+                            color: const Color(0xFF82E3D9),
+                            onPressed: _startTimer,
+                            isActive: !_isRunning,
+                          ),
+                          _TimerButton(
+                            text: 'Stop',
+                            color: const Color(0xFF82E3D9),
+                            onPressed: _stopTimer,
+                            isActive: _isRunning,
+                          ),
+                          _TimerButton(
+                            text: 'Reset',
+                            color: const Color(0xFF82E3D9),
+                            onPressed: _resetTimer,
+                            isActive: true,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -155,8 +230,10 @@ class _TimerPageState extends State<TimerPage> {
 
             // Bottom navigation bar
             Container(
-              height: 60,
-              color: const Color(0xFFD8FFD8),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: const BoxDecoration(
+                color: Color(0xFFD4F9CA),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -184,44 +261,355 @@ class _TimerPageState extends State<TimerPage> {
       ),
     );
   }
+}
 
-  Widget _buildToggleButton(String label, bool isActive) {
-    return GestureDetector(
-      onTap: () => _toggleActivityType(label),
-      child: Container(
-        width: 120,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF5DD6D6) : const Color(0xFFAEEEEE),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isActive ? Colors.white : Colors.black54,
-            fontWeight: FontWeight.w600,
+class _TimerButton extends StatelessWidget {
+  final String text;
+  final Color color;
+  final VoidCallback onPressed;
+  final bool isActive;
+
+  const _TimerButton({
+    Key? key,
+    required this.text,
+    required this.color,
+    required this.onPressed,
+    required this.isActive,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: isActive ? 1.0 : 0.7,
+      duration: const Duration(milliseconds: 300),
+      child: SizedBox(
+        width: 90,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: color,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: isActive ? 4 : 1,
+          ),
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
     );
   }
+}import 'package:flutter/material.dart';
+import 'dart:async';
 
-  Widget _buildControlButton(String label, Color color, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF5DD6D6),
-        fixedSize: const Size(100, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Timer App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: const Color(0xFFD4F9CA),
+      ),
+      home: const TimerPage(),
+    );
+  }
+}
+
+class TimerPage extends StatefulWidget {
+  const TimerPage({Key? key}) : super(key: key);
+
+  @override
+  State<TimerPage> createState() => _TimerPageState();
+}
+
+class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
+  Timer? _timer;
+  int _seconds = 0;
+  bool _isRunning = false;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    if (!_isRunning) {
+      setState(() {
+        _isRunning = true;
+      });
+      _animationController.forward();
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          _seconds++;
+        });
+      });
+    }
+  }
+
+  void _stopTimer() {
+    if (_isRunning) {
+      setState(() {
+        _isRunning = false;
+      });
+      _animationController.reverse();
+      _timer?.cancel();
+    }
+  }
+
+  void _resetTimer() {
+    setState(() {
+      _seconds = 0;
+      _isRunning = false;
+    });
+    _animationController.reset();
+    _timer?.cancel();
+  }
+
+  String _formatTime() {
+    final hours = (_seconds ~/ 3600).toString().padLeft(2, '0');
+    final minutes = ((_seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_seconds % 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top navigation bar
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: const Color(0xFFD4F9CA),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {},
+                  ),
+                  const Text(
+                    'Welcome',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.more_vert),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Main content
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Illustration
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Image.asset(
+                        'assets/kj.jpg',
+                        height: 200,
+                      ),
+                    ),
+
+                    // Timer labels
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          Text(
+                            'Hours',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Minutes',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Seconds',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Timer display
+                    AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: 1.0 + (_animationController.value * 0.05),
+                          child: child,
+                        );
+                      },
+                      child: Text(
+                        _formatTime(),
+                        style: const TextStyle(
+                          fontSize: 64,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    // Timer control buttons
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _TimerButton(
+                            text: 'Start',
+                            color: const Color(0xFF82E3D9),
+                            onPressed: _startTimer,
+                            isActive: !_isRunning,
+                          ),
+                          _TimerButton(
+                            text: 'Stop',
+                            color: const Color(0xFF82E3D9),
+                            onPressed: _stopTimer,
+                            isActive: _isRunning,
+                          ),
+                          _TimerButton(
+                            text: 'Reset',
+                            color: const Color(0xFF82E3D9),
+                            onPressed: _resetTimer,
+                            isActive: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Bottom navigation bar
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: const BoxDecoration(
+                color: Color(0xFFD4F9CA),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.home),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.shield),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.history),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+    );
+  }
+}
+
+class _TimerButton extends StatelessWidget {
+  final String text;
+  final Color color;
+  final VoidCallback onPressed;
+  final bool isActive;
+
+  const _TimerButton({
+    Key? key,
+    required this.text,
+    required this.color,
+    required this.onPressed,
+    required this.isActive,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: isActive ? 1.0 : 0.7,
+      duration: const Duration(milliseconds: 300),
+      child: SizedBox(
+        width: 90,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: color,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: isActive ? 4 : 1,
+          ),
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
     );
