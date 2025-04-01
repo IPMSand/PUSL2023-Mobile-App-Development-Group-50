@@ -65,9 +65,7 @@ class Start04Screen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            
-           
-
+            Text('StudyZen'),
             // Next Button with slide transition
             ElevatedButton(
               onPressed: () {

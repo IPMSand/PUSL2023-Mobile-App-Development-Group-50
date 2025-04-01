@@ -65,8 +65,7 @@ class Start03Screen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-          
-
+            Text('StudyZen'),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(_createRoute()); // Slide transition
