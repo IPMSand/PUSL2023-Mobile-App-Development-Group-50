@@ -89,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-           
             ListTile(
               leading: Icon(Icons.shield_moon_rounded, color: Colors.green),
               title: Text("To Do List"),
@@ -149,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 16),
         ],
       ),
-      body: DashboardWidget(),
+      body: DashboardBody(),
       bottomNavigationBar: ColoredBottomBar(),
     );
   }
