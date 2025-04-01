@@ -35,8 +35,7 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 CircleAvatar(
                   radius: 60,
-                  backgroundColor: const Color.fromRGBO(105, 240, 174, 1),
-                  child: Icon(Icons.person, color: Colors.white, size: 80),
+                  backgroundImage: AssetImage('assets/images/profile.jpg'),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -60,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.logout, color: Colors.red),
-                  title: Text("Log Out", style: TextStyle(color: Colors.red)),
+                  title: Text("Back to the Home Screen", style: TextStyle(color: Colors.red)),
                   onTap: () async {
                     await FirebaseAuth.instance.signOut();
                     Navigator.pop(context); // adjust here

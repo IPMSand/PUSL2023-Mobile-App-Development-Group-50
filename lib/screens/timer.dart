@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../widgets/colored_bottom_nav.dart';
 
 
 class TimerPage extends StatefulWidget {
@@ -75,7 +76,7 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Timer Page'),
+        title: Text('Study Focus Timer'),
         backgroundColor: Colors.greenAccent,
       ),
       body: SafeArea(
@@ -180,6 +181,7 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
           ],
         ),
       ),
+      bottomNavigationBar: ColoredBottomBar(),
     );
   }
 }

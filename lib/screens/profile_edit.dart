@@ -187,8 +187,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           const SizedBox(height: 20),
                           const CircleAvatar(
                             radius: 60,
-                            backgroundColor: Color.fromARGB(255, 15, 110, 44),
-                            child: Icon(Icons.person, size: 60, color: Colors.white),
+                            backgroundImage: AssetImage('assets/images/profile.jpg'),
+
                           ),
                           const SizedBox(height: 30),
                           Row(

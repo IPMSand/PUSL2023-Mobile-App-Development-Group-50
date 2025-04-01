@@ -75,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   CircleAvatar(
                     radius: 30,
                     backgroundImage: AssetImage('assets/images/profile.jpg'),
-                    backgroundColor: Colors.white,
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -147,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => _navigateToScreen(ProfileScreen()),
             child: CircleAvatar(
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Colors.green.shade800),
+              backgroundImage: AssetImage('assets/images/profile.jpg'),
             ),
           ),
           const SizedBox(width: 16),
