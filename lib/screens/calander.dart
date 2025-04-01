@@ -213,4 +213,3 @@ class _CalendarScreenState extends State<CalendarScreen> {
 }
 // TODO: 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.
     //Try replacing the use of the deprecated member with the replacement.
-// TODo: Bottomnav bar here is cutstom desigend, try using bottom_navbar.dart widget calling..
