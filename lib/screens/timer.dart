@@ -122,7 +122,7 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Image.asset(
-                        'assets/kj.jpg',
+                        'assets/images/timer.jpg',
                         height: 200,
                       ),
                     ),
