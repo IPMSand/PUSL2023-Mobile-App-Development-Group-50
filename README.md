@@ -15,7 +15,9 @@
 - Event Planner
 - Calendar
 - Study Focus Timmer
-<h3>Future Enhancements</h3>
+
+  
+<h4>Future Enhancements</h4>
 <h4>Additional Notes</h4>
 <h4>Group Members</h4>
 ..............
