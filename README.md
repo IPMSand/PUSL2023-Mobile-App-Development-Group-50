@@ -2,7 +2,7 @@
 - Course: PUSL2023 Mobile App Development 
 - Year: 2nd Year, 2nd Semester
 ## Project Overview
-- <p>This project aims to develop a Student Study Management Mobile application thst facilitate students to manage thier taks easier from one platform.</p>
+- This project aims to develop a Student Study Management Mobile application that facilitates students to manage their tasks easier from one platform.
 ## Implementation
 - Frontend: Fluuter
 - Backend: Firebase
